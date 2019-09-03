@@ -20,7 +20,24 @@
 </head>
 
 <body>
+
+
+    {% include 'includes/_messages.html' %}
+    
+    
+    
+    {% block content %} 
+    
+    {% block heading %}
+    <h1 class="site-heading text-center text-white d-none d-lg-block">
+        <span class="site-heading-upper text-primary mb-3">Sponsored By SOR Cooking Equipment</span>
+        <span class="site-heading-lower">The World's Cookbook</span>
+    </h1> 
+    {% endblock %}
+    
+    
     {% block navigation %}
+    <!--{% set active_page = active_page|default('index') -%}-->
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" id="mainNav">
         <div class="container">
@@ -30,31 +47,31 @@
       </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item active px-lg-4">
+                    <li class="nav-item {% if active_page == "index" %}active{% endif %} px-lg-4">
                         <a class="nav-link text-uppercase text-expanded" href="{{url_for('index')}}">Home
                         <span class="sr-only">(current)</span>
                     </a>
                     </li>
-                    <li class="nav-item px-lg-4">
+                    <li class="nav-item {% if active_page == "about" %}active{% endif %} px-lg-4">
                         <a class="nav-link text-uppercase text-expanded" href="#">About</a>
                     </li>
-                    <li class="nav-item px-lg-4">
+                    <li class="nav-item {% if active_page == "browse" %}active{% endif %} px-lg-4">
                         <a class="nav-link text-uppercase text-expanded" href="{{url_for('browse')}}">Browse</a>
                     </li>
-                    <li class="nav-item px-lg-4">
+                    <li class="nav-item {% if active_page == "register" %}active{% endif %} px-lg-4">
                         <a class="nav-link text-uppercase text-expanded" href="{{url_for('register')}}">Sign Up</a>
                     </li>
-                    <li class="nav-item px-lg-4">
+                    <li class="nav-item {% if active_page == "login" %}active{% endif %} px-lg-4">
                         <a class="nav-link text-uppercase text-expanded" href="{{url_for('login')}}">Login</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+
+    {% endblock %} 
     
     {% endblock %}
-    
-    {% include 'includes/_messages.html' %} {% block content %} {% endblock %}
 
     <!-- Bootstrap core JavaScript -->
     <script src="../static/vendor/jquery/jquery.min.js"></script>

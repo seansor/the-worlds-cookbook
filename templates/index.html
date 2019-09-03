@@ -1,15 +1,17 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
+{% set active_page = "index" %}
+
+
 
 {% block content %}
 
-<h1 class="site-heading text-center text-white d-none d-lg-block">
-    <span class="site-heading-upper text-primary mb-3">Sponsored By SOR Cooking Equipment</span>
-    <span class="site-heading-lower">The World's Cookbook</span>
-</h1>
-
-<!--{% block navigation %}
-    {{ super() }}
-{% endblock %}-->
+    {% block heading %}
+        {{ super() }}
+    {% endblock %}
+    
+    {% block navigation %}
+        {{ super() }}
+    {% endblock %}
 
 <section class="page-section clearfix">
     <div class="container">
@@ -23,7 +25,7 @@
                 <p class="mb-3">Every cup of our quality artisan coffee starts with locally sourced, hand picked ingredients. Once you try it, our coffee will be a blissful addition to your everyday morning routine - we guarantee it!
                 </p>
                 <div class="intro-button mx-auto">
-                    <a class="btn btn-primary btn-xl" href="register.html">Sign Up!</a>
+                    <a class="btn btn-primary btn-xl" href="{{ url_for('register') }}">Sign Up!</a>
                 </div>
             </div>
         </div>

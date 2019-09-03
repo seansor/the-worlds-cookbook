@@ -1,0 +1,11 @@
+{% extends 'base.html' %} {% block content %} {% block heading %} {{ super() }} {% endblock %} {% block navigation %} {{ super() }} {% endblock %}
+
+<form action='/add_recipe' method="POST">
+    <div class="form-group">
+        <label for="recipe_image">Upload Recipe Image</label>
+        <input type="file" class="form-control-file" id="recipe_image" name='recipe_image'>
+    </div>
+    <button type="submit" class="btn btn-primary">Sign in</button>
+</form>
+
+{% endblock %}

@@ -5,6 +5,7 @@ from wtforms import Form, BooleanField, StringField, PasswordField, validators
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from functools import wraps
+from datetime import datetime
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -108,7 +109,23 @@ def logout():
 def browse():
     return render_template('browse.html')
     
+@app.route('/add_recipe', methods=['GET', 'POST'])
+@is_logged_in
+def add_recipe():
+    if 'recipe_image' in request.files:
+        recipe_image = request.files['recipe_image']
+        mongo.save_file(recipe_image.filename, recipe_image)
+        author = session['email']
+        recipe = {"image": recipe_image.filename, "title":"test", "description":"test", "serves":2, "prep_time":1, "cook_time":1, "difficulty":"easy", "ingredients":{"main":["beans","toast"],"side":["butter"]}, "method":{"1":"slice bread","2":"put pot on medium heat and add beans","3":"toast bread","4":"butter bread","5":"once beans are heated through remove from pot and place on top of toast"},"required_utensils":[""],"main_ingredient":"beans", "vegetarian":True,"vegan":True,"cuisine":"British","author":author,"last_edited": 6730934113336819713}
+        recipes = mongo.db.recipes
+        recipes.insert_one(recipe)
+    
+    return 'Done!'
+    
+    
+    
 if __name__ == "__main__":
+    # Remember to hide the secret key at the end
     app.secret_key='secret124'
     app.run(host=os.getenv('IP'),
             port=int(os.getenv('PORT')),

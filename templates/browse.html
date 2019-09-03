@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
+{% set active_page = "browse" %}
 
 {% block content %}
+
+{% block heading %}
+        {{ super() }}
+    {% endblock %}
+
+{% block navigation %}
+    {{ super() }}
+{% endblock %}
 
 <h1>Browse Recipes <small>Welcome {{session.name}}</small></h1>
 
