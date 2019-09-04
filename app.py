@@ -102,7 +102,13 @@ def is_logged_in(f):
 def logout():
     session.clear()
     flash('You are now logged out', 'success')
-    return redirect(url_for('login.html'))
+    return redirect(url_for('login'))
+    
+@app.route('/get_recipe/<recipe_id>')
+def get_recipe(recipe_id):
+    recipe = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
+    
+    return render_template('recipe.html', recipe=recipe)
     
 @app.route('/browse')
 @is_logged_in
@@ -126,7 +132,7 @@ def add_recipe():
     
 if __name__ == "__main__":
     # Remember to hide the secret key at the end
-    app.secret_key='secret124'
+    app.secret_key='secret125'
     app.run(host=os.getenv('IP'),
             port=int(os.getenv('PORT')),
             debug=True)

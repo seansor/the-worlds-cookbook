@@ -3,13 +3,6 @@
 
 {% block content %} {% from "/includes/_formhelpers.html" import render_field %}
 
-{% block heading %}
-        {{ super() }}
-    {% endblock %}
-    
-    {% block navigation %}
-        {{ super() }}
-    {% endblock %}
 
 <form action="/register" method="POST">
     <dl>

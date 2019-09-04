@@ -1,16 +1,123 @@
-{% extends 'base.html' %}
-{% set active_page = "browse" %}
+{% extends 'base.html' %} {% set active_page = "recipe" %} {% block content %}
 
-{% block content %}
+<h1>Browse Recipes</h1>
 
-{% block heading %}
-        {{ super() }}
-    {% endblock %}
+<div class="container">
+    <div class="row">
+        <div class="col-6 col-md-4">
+            <div class="card">
+                <div class="header">
+                    <div class="icon">
+                        <a href="#"><i class="fa fa-heart-o"></i></a>
+                    </div>
+                </div>
+                <div class="text">
+                    <h1 class="food">
+                        Chinese Noodles
+                    </h1>
+                    <i class="fa fa-clock-o"> 15 Mins</i>
+                    <i class="fa fa-users"> Serves 2</i>
+                    <div class="stars">
+                        <li>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star-o"></i></a>
+                        </li>
+                    </div>
+                    <p class="info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, temporibus.</p>
+                </div>
+                <a href="#" class="btn">Let's Cook!</a>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="card">
+                <div class="header">
+                    <div class="icon">
+                        <a href="#"><i class="fa fa-heart-o"></i></a>
+                    </div>
+                </div>
+                <div class="text">
+                    <h1 class="food">
+                        Chinese Noodles
+                    </h1>
+                    <i class="fa fa-clock-o"> 15 Mins</i>
+                    <i class="fa fa-users"> Serves 2</i>
 
-{% block navigation %}
-    {{ super() }}
-{% endblock %}
+                    <div class="stars">
+                        <li>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star-o"></i></a>
+                        </li>
+                    </div>
+                    <p class="info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, temporibus.</p>
+                </div>
+                <a href="#" class="btn">Let's Cook!</a>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="card">
+                <div class="header">
+                    <div class="icon">
+                        <a href="#"><i class="fa fa-heart-o"></i></a>
+                    </div>
+                </div>
+                <div class="text">
+                    <h1 class="food">
+                        Chinese Noodles
+                    </h1>
+                    <i class="fa fa-clock-o"> 15 Mins</i>
+                    <i class="fa fa-users"> Serves 2</i>
 
-<h1>Browse Recipes <small>Welcome {{session.name}}</small></h1>
+                    <div class="stars">
+                        <li>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star-o"></i></a>
+                        </li>
+                    </div>
+                    <p class="info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, temporibus.</p>
+                </div>
+                <a href="#" class="btn">Let's Cook!</a>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="card">
+                <div class="header">
+                    <div class="icon">
+                        <a href="#"><i class="fa fa-heart-o"></i></a>
+                    </div>
+                </div>
+                <div class="text">
+                    <h1 class="food">
+                        Chinese Noodles
+                    </h1>
+                    <i class="fa fa-clock-o"> 15 Mins</i>
+                    <i class="fa fa-users"> Serves 2</i>
+
+                    <div class="stars">
+                        <li>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star"></i></a>
+                            <a href="#"><i class="fa fa-star-o"></i></a>
+                        </li>
+                    </div>
+                    <p class="info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, temporibus.</p>
+                </div>
+                <a href="#" class="btn">Let's Cook!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 {% endblock %}
