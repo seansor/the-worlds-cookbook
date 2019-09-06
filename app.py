@@ -6,6 +6,8 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from functools import wraps
 from datetime import datetime
+import math
+import itertools
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -106,27 +108,44 @@ def logout():
     
 @app.route('/get_recipe/<recipe_id>')
 def get_recipe(recipe_id):
-    recipe = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
+    recipe_mdb = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
     
-    return render_template('recipe.html', recipe=recipe)
+    return render_template('recipe.html', recipe=recipe_mdb)
     
 @app.route('/browse')
 @is_logged_in
 def browse():
-    return render_template('browse.html')
+    recipes_mdb = mongo.db.recipes.find()
+    # copy of cursor object as iterating over cursor in time_to_hrs_mins func
+    # prevents iterable cursor from being passed to template 
+    recipes_mdb_copy = mongo.db.recipes.find()
+    # returns array of hour and minute tuples
+    hrs_mins = time_to_hrs_and_mins(recipes_mdb_copy)
+    recipes = zip(recipes_mdb, hrs_mins)
+       
+    return render_template('browse.html', recipes=recipes, hrs_mins=hrs_mins)
+  
+# Convert cooking time from minutes to hours & minutes  
+def time_to_hrs_and_mins(recipes):
+    hours_mins = []
+    for recipe in recipes:
+        total_time = recipe['cook_time'] + recipe['prep_time']
+        if total_time < 60:
+            hours_mins.append((0,total_time))
+        else:
+            hours = math.floor(round(total_time/60))
+            minutes = total_time-(hours*60)
+            hours_mins.append((hours, minutes))
+    return hours_mins
+        
+
     
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
 def add_recipe():
     if 'recipe_image' in request.files:
-        recipe_image = request.files['recipe_image']
-        mongo.save_file(recipe_image.filename, recipe_image)
-        author = session['email']
-        recipe = {"image": recipe_image.filename, "title":"test", "description":"test", "serves":2, "prep_time":1, "cook_time":1, "difficulty":"easy", "ingredients":{"main":["beans","toast"],"side":["butter"]}, "method":{"1":"slice bread","2":"put pot on medium heat and add beans","3":"toast bread","4":"butter bread","5":"once beans are heated through remove from pot and place on top of toast"},"required_utensils":[""],"main_ingredient":"beans", "vegetarian":True,"vegan":True,"cuisine":"British","author":author,"last_edited": 6730934113336819713}
-        recipes = mongo.db.recipes
-        recipes.insert_one(recipe)
     
-    return 'Done!'
+        return 'Done!'
     
     
     

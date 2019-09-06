@@ -3,7 +3,25 @@
 
 {% block content %}
 
-
-<h1>Recipe <small>Welcome {{session.name}}</small></h1>
+<div class="container recipe-container">
+    <div class="row header">
+        <div class="col-md-4">
+            <div class="recipe-img" style="background-image: url({{ recipe['image'] }})">
+            </div>
+        </div>
+        <div class="col-md-8 recipe-info">
+            <div class="row">
+                <h1>{{ recipe['title'] }}</h1>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <i class="fa fa-clock-o"></i> 
+                    {{ recipe['prep_time'] }}
+                    {{ recipe['cook_time'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

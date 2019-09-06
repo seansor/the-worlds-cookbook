@@ -10,21 +10,23 @@
   box-sizing: border-box;
 }
 
-img {
-  max-width: 100%;
-}
-
+/*img {
+   max-width: 100%;
+}*/
 .card {
   position: relative;
+  display: flex;
+  flex-direction: column;
   background: #fff;
-  max-width: 500px;
+  width: 250px;
+  height: 400px;
   margin: 20px auto;
   box-shadow: 0px 0px 30px 2px #000;
 }
 .card .header {
   background: url("http://img.taste.com.au/UZVXAdo7/taste/2016/11/chinese-egg-noodle-and-vegetable-stir-fry-94186-1.jpeg") no-repeat center;
   background-size: cover;
-  min-height: 250px;
+  height: 150px;
 }
 .card .header .icon a .fa-heart-o {
   position: absolute;
@@ -38,29 +40,37 @@ img {
   border-radius: 50%;
   box-shadow: 0px 5px 30px 1px #17BEBB;
 }
-.card .text .food {
+.card .text {
+  max-height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+.card .text .recipe-title {
   color: #212129;
   text-align: left;
   font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin: 5px 30px;
+  margin: 5px 15px;
 }
 .card .text .fa-clock-o {
   color: #9B9B9B;
-  margin: 0 30px;
+  margin: 0 15px;
 }
 .card .text .fa-users {
   color: #9B9B9B;
 }
 .card .stars {
-  margin: 10px 30px;
+  margin: 10px 15px;
 }
 .card .stars li a i {
   color: #FFE500;
 }
-.card .info {
-  margin: 10px 30px;
+.card .description {
+  margin: 10px 15px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-overflow: ellipsis;
 }
 .card a.btn {
   display: block;
@@ -70,12 +80,25 @@ img {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   text-align: center;
+  margin-top: auto;
   padding: 10px;
   transition: 250ms;
 }
 .card a.btn:hover {
   background: #17BEBB;
   transition: 250ms;
+}
+
+.recipe-container {
+  background-color: #fafafa;
+  border-radius: 10px;
+  margin-top: 25px;
+}
+.recipe-container .recipe-img {
+  height: 300px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 /*# sourceMappingURL=style.css.map */
