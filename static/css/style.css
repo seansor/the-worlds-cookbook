@@ -2,12 +2,15 @@
 * {
   margin: 0px;
   padding: 0;
-  list-style-type: none;
   text-decoration: none;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -o-box-sizing: border-box;
   box-sizing: border-box;
+}
+
+ul {
+  list-style-type: none;
 }
 
 /*img {
@@ -99,6 +102,14 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+.recipe-container .recipe-info .fa {
+  font-size: 2rem;
+  margin-right: 3px;
+}
+.recipe-container .recipe-info .fa-clock-o {
+  align-self: center;
+  font-size: 2.5rem;
 }
 
 /*# sourceMappingURL=style.css.map */

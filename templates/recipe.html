@@ -1,7 +1,4 @@
-{% extends 'base.html' %}
-{% set active_page = "recipe" %}
-
-{% block content %}
+{% extends 'base.html' %} {% set active_page = "recipe" %} {% block content %}
 
 <div class="container recipe-container">
     <div class="row header">
@@ -14,12 +11,58 @@
                 <h1>{{ recipe['title'] }}</h1>
             </div>
             <div class="row">
-                <div class="col-4">
-                    <i class="fa fa-clock-o"></i> 
-                    {{ recipe['prep_time'] }}
-                    {{ recipe['cook_time'] }}
+                <div class="col">
+                    <div class="row">
+                        <i class="fa fa-clock-o"></i>
+                        <div class="col d-flex flex-column">
+                            <div>Prep: {{ recipe['prep_time'] }} Mins</div>
+                            <div>Cook: {{ recipe['cook_time'] }} Mins</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row align-self-center">
+                        <i class="fa fa-cutlery"></i> {{ recipe['difficulty'] }}
+
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row align-self-center">
+                        <i class="fa fa-users"></i>
+                        <span>Serves: {{ recipe['serves'] }}</span>
+                    </div>
                 </div>
             </div>
+            <div class="row">
+                <p>{{ recipe['description'] }}</p>
+            </div>
+            <div class="row">
+                {% if recipe['vegetarian'] %}
+                <span><i class="fa fa-leaf"></i>Vegatarian</span> {% if recipe['vegan'] %}
+                <span><i class="fa fa-leaf"></i>Vegan</span> {% endif %} {% else %}
+                <span>Not suitable for Vegatarians</span> {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Ingredients</h2>
+            {% for ingredient_section in ingredient_sections %}
+            <h4>{{ ingredient_section }}</h4>
+            <ul>
+                {% for ingredient in recipe['ingredients'][ingredient_section] %}
+                <li>{{ ingredient }}</li>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+        </div>
+        <div class="col-md-8">
+            <h2>Method</h2>
+            <ol>
+                {% for step in recipe['method'] %}
+                <li>{{ step }}</li>
+                {% endfor %}
+            </ol>
         </div>
     </div>
 </div>

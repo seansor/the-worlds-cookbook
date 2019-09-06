@@ -106,12 +106,6 @@ def logout():
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
     
-@app.route('/get_recipe/<recipe_id>')
-def get_recipe(recipe_id):
-    recipe_mdb = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
-    
-    return render_template('recipe.html', recipe=recipe_mdb)
-    
 @app.route('/browse')
 @is_logged_in
 def browse():
@@ -138,7 +132,12 @@ def time_to_hrs_and_mins(recipes):
             hours_mins.append((hours, minutes))
     return hours_mins
         
-
+@app.route('/get_recipe/<recipe_id>')
+def get_recipe(recipe_id):
+    recipe_mdb = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
+    ingredient_sections = list(recipe_mdb['ingredients'].keys())
+    app.logger.info(recipe_mdb['ingredients']['main'])
+    return render_template('recipe.html', recipe=recipe_mdb, ingredient_sections=ingredient_sections)
     
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
