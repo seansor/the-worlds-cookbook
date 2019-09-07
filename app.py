@@ -132,12 +132,16 @@ def time_to_hrs_and_mins(recipes):
             hours_mins.append((hours, minutes))
     return hours_mins
         
-@app.route('/get_recipe/<recipe_id>')
+@app.route('/recipe/<recipe_id>')
 def get_recipe(recipe_id):
     recipe_mdb = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
     ingredient_sections = list(recipe_mdb['ingredients'].keys())
-    app.logger.info(recipe_mdb['ingredients']['main'])
-    return render_template('recipe.html', recipe=recipe_mdb, ingredient_sections=ingredient_sections)
+    
+    utensils_mdb = mongo.db.Utensils.find()
+    utensils_list = list(utensils_mdb)
+    company_utensils = utensils_list[0]['utensils']
+    app.logger.info(utensils_list)
+    return render_template('recipe.html', recipe=recipe_mdb, ingredient_sections=ingredient_sections, company_utensils = company_utensils)
     
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in

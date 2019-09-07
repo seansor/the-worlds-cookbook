@@ -63,6 +63,19 @@
                 <li>{{ step }}</li>
                 {% endfor %}
             </ol>
+            {% if recipe['required_utensils']|length >0 %}
+            <h4>Required Untensils</h4>
+            <ul>
+                {% for utensil in recipe['required_utensils'] %}
+                    {% if utensil in company_utensils %}
+                        <li>{{ utensil }}</li>
+                        <li><small>This item can be found at our store<a href="https://www.nisbets.co.uk/home-chef/_/a33-1">Visit</a></small></li>
+                    {% else %}
+                        <li>{{ utensil }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {% endif %}
         </div>
     </div>
 </div>
