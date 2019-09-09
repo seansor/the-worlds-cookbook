@@ -38,8 +38,11 @@
             </div>
             <div class="row">
                 {% if recipe['vegetarian'] %}
-                <span><i class="fa fa-leaf"></i>Vegatarian</span> {% if recipe['vegan'] %}
-                <span><i class="fa fa-leaf"></i>Vegan</span> {% endif %} {% else %}
+                <span><i class="fa fa-leaf"></i>Vegatarian</span> 
+                    {% if recipe['vegan'] %}
+                    <span><i class="fa fa-leaf"></i>Vegan</span> 
+                    {% endif %} 
+                {% else %}
                 <span>Not suitable for Vegatarians</span> {% endif %}
             </div>
         </div>
