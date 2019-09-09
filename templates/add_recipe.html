@@ -1,11 +1,22 @@
 {% extends 'base.html' %} {% block content %}
 
-<form action='/add_recipe' method="POST">
-    <div class="form-group">
-        <label for="recipe_image">Upload Recipe Image</label>
-        <input type="file" class="form-control-file" id="recipe_image" name='recipe_image'>
-    </div>
-    <button type="submit" class="btn btn-primary">Sign in</button>
+{% from "/includes/_formhelpers.html" import render_field %}
+
+<form action="{{ url_for('add_recipe') }}" method="POST">
+    <dl>
+        {{ render_field(form.image, class="form-control") }}
+        {{ render_field(form.title, class="form-control") }}
+        {{ render_field(form.description, class="form-control") }}
+        {{ render_field(form.cook_time, class="form-control") }}
+        {{ render_field(form.prep_time, class="form-control") }}
+        {{ render_field(form.serves, class="form-control") }}
+        {{ render_field(form.difficulty, class="form-control") }}
+        {{ render_field(form.is_vegetarian, class="form-control") }}
+        {{ render_field(form.is_vegan, class="form-control") }}
+        {{ render_field(form.ingredients, class="form-control") }}
+        {{ render_field(form.method, class="form-control") }}
+    </dl>
+    <input type=submit value='Add Recipe' class="btn btn-primary">
 </form>
 
 {% endblock %}

@@ -1,7 +1,8 @@
 import os
 from flask import Flask, render_template, flash, redirect, request, url_for, session
 from flask_bcrypt import Bcrypt
-from wtforms import Form, BooleanField, StringField, PasswordField, validators
+from wtforms import Form, BooleanField, StringField, PasswordField, TextAreaField, IntegerField, SelectField, FieldList, validators
+from wtforms.fields.html5 import URLField
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from functools import wraps
@@ -122,6 +123,7 @@ def browse():
 # Convert cooking time from minutes to hours & minutes  
 def time_to_hrs_and_mins(recipes):
     hours_mins = []
+    
     for recipe in recipes:
         total_time = recipe['cook_time'] + recipe['prep_time']
         if total_time < 60:
@@ -142,13 +144,26 @@ def get_recipe(recipe_id):
     company_utensils = utensils_list[0]['utensils']
     app.logger.info(utensils_list)
     return render_template('recipe.html', recipe=recipe_mdb, ingredient_sections=ingredient_sections, company_utensils = company_utensils)
+
+class addRecipe(Form):
+    image = URLField('Recipe Image', [validators.InputRequired()])
+    title = StringField('Title', [validators.Length(min=4, max=40)])
+    description = TextAreaField('Description', [validators.Length(min=15, max=150)])
+    cook_time = IntegerField('Cooking Time', [validators.InputRequired()])
+    prep_time = IntegerField('Preparation Time', [validators.InputRequired()])
+    serves = StringField('Servings', [validators.Length(min=1, max=12)])
+    difficulty = SelectField('Difficulty', choices = [(1,'easy'), (2,'medium'), (3,'hard')] )
+    is_vegetarian = BooleanField('Vegetarian', [validators.DataRequired()])
+    is_vegan = BooleanField('Vegan', [validators.DataRequired()])
+    ingredients = FieldList(StringField('Ingredients', [validators.DataRequired()]), min_entries=3)
+    method = FieldList(StringField('Method', [validators.DataRequired()]), min_entries=3)
+
     
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
 def add_recipe():
-    if 'recipe_image' in request.files:
-    
-        return 'Done!'
+    form = addRecipe(request.form)
+    return render_template('add_recipe.html', form = form)
     
     
     
