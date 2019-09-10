@@ -13,9 +13,18 @@ ul {
   list-style-type: none;
 }
 
-/*img {
-   max-width: 100%;
-}*/
+li label {
+  display: none;
+}
+
+form dl dt {
+  color: #fafafa;
+}
+
+#ingredients {
+  height: auto;
+}
+
 .card {
   position: relative;
   display: flex;
