@@ -17,12 +17,23 @@ li label {
   display: none;
 }
 
+.loginform {
+  width: 100%;
+  margin: 0 auto;
+}
+
 form dl dt {
   color: #fafafa;
 }
 
-#ingredients {
+.form-control {
   height: auto;
+}
+.form-control input {
+  width: 100%;
+}
+.form-control textarea {
+  width: 100%;
 }
 
 .card {

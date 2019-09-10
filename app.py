@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, flash, redirect, request, url_for, session
 from flask_bcrypt import Bcrypt
-from wtforms import Form, BooleanField, StringField, PasswordField, TextAreaField, IntegerField, SelectField, FieldList, validators
+from wtforms import Form, BooleanField, StringField, PasswordField, TextAreaField, IntegerField, SelectField, SelectMultipleField, FieldList, validators
 from wtforms.fields.html5 import URLField
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
@@ -140,30 +140,45 @@ def get_recipe(recipe_id):
     ingredient_sections = list(recipe_mdb['ingredients'].keys())
     
     utensils_mdb = mongo.db.Utensils.find()
-    utensils_list = list(utensils_mdb)
-    company_utensils = utensils_list[0]['utensils']
-    app.logger.info(utensils_list)
+    utensils_object_list = list(utensils_mdb)
+    company_utensils = utensils_object_list[0]['utensils']
+    
     return render_template('recipe.html', recipe=recipe_mdb, ingredient_sections=ingredient_sections, company_utensils = company_utensils)
 
 class addRecipe(Form):
     image = URLField('Recipe Image', [validators.InputRequired()])
-    title = StringField('Title', [validators.Length(min=4, max=40)])
-    description = TextAreaField('Description', [validators.Length(min=15, max=150)])
+    title = StringField('Title', [validators.Length(min=4, max=40), validators.InputRequired()])
+    description = TextAreaField('Description', [validators.Length(min=15, max=150), validators.InputRequired()])
     cook_time = IntegerField('Cooking Time', [validators.InputRequired()])
     prep_time = IntegerField('Preparation Time', [validators.InputRequired()])
-    serves = StringField('Servings', [validators.Length(min=1, max=12)])
-    difficulty = SelectField('Difficulty', choices = [(1,'easy'), (2,'medium'), (3,'hard')] )
-    is_vegetarian = BooleanField('Vegetarian', [validators.DataRequired()])
-    is_vegan = BooleanField('Vegan', [validators.DataRequired()])
-    ingredients = FieldList(StringField('Ingredients', [validators.DataRequired()]), min_entries=3)
-    method = FieldList(StringField('Method', [validators.DataRequired()]), min_entries=3)
+    serves = StringField('Servings', [validators.Length(min=1, max=12),validators.InputRequired()])
+    difficulty = SelectField('Difficulty', choices = [(1,'Easy'), (2,'Medium'), (3,'Hard')] )
+    is_vegetarian = BooleanField('Vegetarian')
+    is_vegan = BooleanField('Vegan')
+    ingredients = FieldList(StringField('Ingredients', [validators.InputRequired()]), min_entries=3)
+    method = FieldList(TextAreaField('Method', [validators.InputRequired()]), min_entries=3)
+    utensils = SelectMultipleField('Utensils')
+    other_utensils = StringField('Add Other Utensils', [validators.Length(min=4, max=40)])
+
 
     
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
 def add_recipe():
     form = addRecipe(request.form)
-    return render_template('add_recipe.html', form = form)
+    utensils_mdb = mongo.db.Utensils.find()
+    utensils_object_list = list(utensils_mdb)
+    company_utensils = (utensils_object_list[0]['utensils'])
+    utensil_numbers = []
+    for i in range(1, len(company_utensils)+1):
+        utensil_numbers.append(i)
+    choices = zip(utensil_numbers,company_utensils)
+    form.utensils.choices = choices
+    if request.method == "POST":
+        app.logger.info("Post")
+        return redirect(url_for('browse'))
+    else:
+        return render_template('add_recipe.html', form = form)
     
     
     

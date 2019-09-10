@@ -1,15 +1,11 @@
-{% extends 'base.html' %} {% block content %}
-
-{% from "/includes/_formhelpers.html" import render_field %}
+{% extends 'base.html' %} {% block content %} {% from "/includes/_formhelpers.html" import render_field %}
 
 <div class="container">
     <form action="{{ url_for('add_recipe') }}" method="POST">
         <dl>
             <div class="row">
                 <div class="col-md-9">
-                    {{ render_field(form.image, class="form-control") }}
-                    {{ render_field(form.title, class="form-control") }}
-                    {{ render_field(form.description, class="form-control") }}
+                    {{ render_field(form.image, class="form-control") }} {{ render_field(form.title, class="form-control") }} {{ render_field(form.description, class="form-control") }}
                 </div>
             </div>
             <div class="row">
@@ -22,7 +18,7 @@
                 <div class="col-md-3">
                     {{ render_field(form.serves, class="form-control") }}
                 </div>
-                
+
             </div>
             <div class="row">
                 <div class="col-md-2">
@@ -36,13 +32,26 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3 ingredients">
+                <div class="col-md-2 ingredients">
                     {{ render_field(form.ingredients, class="form-control") }}
                 </div>
-                <button type="button" id="addIngredient">Add Ingredient</button>
-                <button type="button" id="addIngredientSection">Add New Section</button> 
+                <div class="col-md-2">
+                    <button type="button" id="addIngredient">Add Ingredient</button>
+                    <button type="button" id="addIngredientSection">Add New Section</button>
+                </div>
                 <div class="col-md-6 method">
                     {{ render_field(form.method, class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <button type="button" id="addStep">Add Step</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ render_field(form.utensils, class="form-control") }}
+                </div>
+                <div class="col-md-6">
+                    {{ render_field(form.other_utensils, class="form-control") }}
                 </div>
             </div>
         </dl>
@@ -50,49 +59,55 @@
     </form>
 </div>
 
-{% endblock %}
-
-{% block customJQuery %}
+{% endblock %} {% block customJQuery %}
 <script type="text/javascript">
     $(document).ready(function() {
         $("#addIngredient").click(function() {
             let i = 3;
             const newListItem = $("<li></li>");
             let newItem = $("<input required type='text' value=''></input>")
-            .attr("id", "ingredients-" + i)
-            .attr("name", "ingredients-" + i);
+                .attr("id", "ingredients-" + i)
+                .attr("name", "ingredients-" + i);
             $("#ingredients").append(newListItem);
             $("#ingredients li:last-child").append(newItem);
             i++;
-        })
-        
+        });
+
         $("#addIngredientSection").click(function() {
             const newSection = $("<input required type='text' id='sectionName' value='' placeholder='Section Name'></input>");
-            const addSection = $("<button type='button' id='add'>Add Section</button>");
+            const addSection = $("<button type='button' id='addSection'>Add Section</button>");
             $("#ingredients").parent().append(newSection, addSection);
-        });
-        
-        $("#add").click(function(){
-            const sectionName = $( "#sectionName" ).val();
-            console.log(sectionName);
-            const section_id  = sectionName.toLowerCase();
-            let dt = $("<dt><label for='" + section_id + "'>"+sectionName+"</label>");
-            let dd = $("<dd></dd>");
-            let ul = $("<ul class='form-control' id='" + section_id + "'></ul>");
-            let li = $("<li></li>");
             
-            $(".ingredients dd:last-of-type").append(dt).append(dd).append(ul);
-            for(let i=0; i<3; i++) {
-                let input = $("<input required type='text' value=''></input>")
-                .attr("id", section_id +"-"+ i)
-                .attr("name", section_id +"-"+ i);
-                $(".ingredients ul").append(li).append(input)
-            }
+             $("#addSection").click(function() {
+                console.log('test');
+                const sectionName = $( "#sectionName" ).val();
+                
+                const section_id  = sectionName.toLowerCase();
+                let dt = $("<dt><label for='" + section_id + "'>"+sectionName+"</label>");
+                let dd = $("<dd></dd>");
+                let ul = $("<ul class='form-control' id='" + section_id + "'></ul>");
+                let li = $("<li></li>");
+                
+                $(".ingredients dd:last-of-type").append(dt).append(dd).append(ul);
+                for(let i=0; i<3; i++) {
+                    let input = $("<input required type='text' value=''></input>")
+                    .attr("id", section_id +"-"+ i)
+                    .attr("name", section_id +"-"+ i);
+                    $(".ingredients ul").append(li).append(input)
+                }
+            });
         });
         
+        $("#addStep").click(function() {
+            let i = 3;
+            const newListItem = $("<li></li>");
+            let newItem = $("<textarea required type='text' value=''></textarea>")
+                .attr("id", "method-" + i)
+                .attr("name", "method-" + i);
+            $("#method").append(newListItem);
+            $("#method li:last-child").append(newItem);
+            i++;
+        });
     });
-    
 </script>
 {% endblock %}
-
-

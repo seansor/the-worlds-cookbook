@@ -38,6 +38,11 @@ li {
    }
 }
 
+.loginform {
+   width: 100%;
+   margin: 0 auto;
+}
+
 form {
    dl {
       dt {
@@ -47,8 +52,14 @@ form {
 }
 
 
-#ingredients {
+.form-control {
    height: auto;
+   input {
+      width: 100%;
+   }
+   textarea {
+      width: 100%;
+   }
 }
 
 .card {
