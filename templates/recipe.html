@@ -6,24 +6,39 @@
             <div class="recipe-img" style="background-image: url({{ recipe['image'] }})">
             </div>
         </div>
-        <div class="col-md-8 recipe-info">
-            <div class="row">
-                <h1>{{ recipe['title'] }}</h1>
-            </div>
+        <div class="col-md-8">
+            <h1>{{ recipe['title'] }}</h1>
             <div class="row">
                 <div class="col">
-                    <div class="row">
+                    <div class="row recipe-info">
                         <i class="fa fa-clock-o"></i>
                         <div class="col d-flex flex-column">
-                            <div>Prep: {{ recipe['prep_time'] }} Mins</div>
-                            <div>Cook: {{ recipe['cook_time'] }} Mins</div>
+                            <div>Prep:
+                            {% if not recipe['prep_time'][0] == '0' %}
+                                {{ recipe['prep_time'][0] }} Hr
+                                {% if not recipe['prep_time'][1] == '0' %}
+                                    {{ recipe['prep_time'][1] }} Mins
+                                {% endif %}
+                            {% else %}
+                                {{ recipe['prep_time'][1] }} Mins
+                            {% endif %}
+                            </div>
+                            <div>Cook:
+                            {% if not recipe['cook_time'][0] == '0' %}
+                                {{ recipe['cook_time'][0] }} Hr
+                                {% if not recipe['cook_time'][1] == '0' %}
+                                    {{ recipe['cook_time'][1] }} Mins
+                                {% endif %}
+                            {% else %}
+                                {{ recipe['cook_time'][1] }} Mins
+                            {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="row align-self-center">
                         <i class="fa fa-cutlery"></i> {{ recipe['difficulty'] }}
-
                     </div>
                 </div>
                 <div class="col">
@@ -44,6 +59,19 @@
                     {% endif %} 
                 {% else %}
                 <span>Not suitable for Vegatarians</span> {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <form id="favourite-form" action="{{ url_for('get_recipe', recipe_id=recipe['_id']) }}" method="POST">
+                        {% if recipe['_id'] in user_favourites %}
+                        <input type="checkbox" name="favourite" checked>
+                        <span><button id="unfavourite" value="True" href="#"><i class="fa fa-heart"></i></button>Remove from favourites</span>
+                        {% else %}
+                        <input type="checkbox" name="favourite">
+                        <span><button id="favourite" href="#"><i class="fa fa-heart-o"></i></button>Add to Favourites</span>
+                        {% endif %}
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -83,4 +111,23 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block customJQuery %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        function submit(){
+            $("favourite-form").submit();
+        }
+        $("#favourite").click(submit, function(submit){
+            $("input[name='favourite']").prop('checked', true);
+            submit();
+        });
+        
+        $("#unfavourite").click(submit, function(submit){
+            $("input[name='favourite']").prop('checked', false);
+            submit();
+        });
+    });
+</script>
 {% endblock %}

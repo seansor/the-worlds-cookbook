@@ -1,14 +1,13 @@
 import os
 from flask import Flask, render_template, flash, redirect, request, url_for, session
 from flask_bcrypt import Bcrypt
-from wtforms import Form, BooleanField, StringField, PasswordField, TextAreaField, IntegerField, SelectField, SelectMultipleField, FieldList, validators
-from wtforms.fields.html5 import URLField
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from functools import wraps
 from datetime import datetime
 import math
-import itertools
+#import itertools
+from forms import *
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -22,17 +21,7 @@ mongo = PyMongo(app)
 def index():
     return render_template("index.html", recipes=mongo.db.recipes.find())
     
-# Register Form Class (WTForms)
-class RegistrationForm(Form):
-    firstname = StringField('First Name', [validators.Length(min=4, max=15)])
-    lastname = StringField('Last Name', [validators.Length(min=4, max=15)])
-    email = StringField('Email Address', [validators.Length(min=6, max=35)])
-    password = PasswordField('New Password', [
-        validators.DataRequired(),
-        validators.EqualTo('confirm', message='Passwords must match')
-    ])
-    confirm = PasswordField('Repeat Password')
-    accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
+
  
 # User Registration
 @app.route('/register', methods=['GET', 'POST'])
@@ -78,6 +67,7 @@ def login():
                 session['logged_in'] = True
                 session['email'] = email
                 session['name'] = user['firstname']
+                session['id'] = str(user['_id'])
                 
                 flash('You are now logged in', 'success')
                 return redirect(url_for('browse'))
@@ -111,30 +101,13 @@ def logout():
 @is_logged_in
 def browse():
     recipes_mdb = mongo.db.recipes.find()
-    # copy of cursor object as iterating over cursor in time_to_hrs_mins func
-    # prevents iterable cursor from being passed to template 
-    recipes_mdb_copy = mongo.db.recipes.find()
-    # returns array of hour and minute tuples
-    hrs_mins = time_to_hrs_and_mins(recipes_mdb_copy)
-    recipes = zip(recipes_mdb, hrs_mins)
+    user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
+    user_favourites = user['favourites']
        
-    return render_template('browse.html', recipes=recipes, hrs_mins=hrs_mins)
+    return render_template('browse.html', recipes=recipes_mdb, user_favourites=user_favourites)
   
-# Convert cooking time from minutes to hours & minutes  
-def time_to_hrs_and_mins(recipes):
-    hours_mins = []
-    
-    for recipe in recipes:
-        total_time = recipe['cook_time'] + recipe['prep_time']
-        if total_time < 60:
-            hours_mins.append((0,total_time))
-        else:
-            hours = math.floor(round(total_time/60))
-            minutes = total_time-(hours*60)
-            hours_mins.append((hours, minutes))
-    return hours_mins
         
-@app.route('/recipe/<recipe_id>')
+@app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
 def get_recipe(recipe_id):
     recipe_mdb = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
     ingredient_sections = list(recipe_mdb['ingredients'].keys())
@@ -143,24 +116,24 @@ def get_recipe(recipe_id):
     utensils_object_list = list(utensils_mdb)
     company_utensils = utensils_object_list[0]['utensils']
     
-    return render_template('recipe.html', recipe=recipe_mdb, ingredient_sections=ingredient_sections, company_utensils = company_utensils)
+    if request.method == "POST":
+        favourite= request.form.get('favourite')
+        if favourite:
+            mongo.db.users.update_one({'_id': ObjectId(session['id'])}, { "$push": { "favourites": ObjectId(recipe_id) } })
+            mongo.db.recipes.update_one({'_id': ObjectId(recipe_id)}, { "$inc": { "favourite": 1 } })
+        else:
+            mongo.db.users.update_one({'_id': ObjectId(session['id'])}, { "$pull": { "favourites": ObjectId(recipe_id) } })
+            mongo.db.recipes.update_one({'_id': ObjectId(recipe_id)}, { "$inc": { "favourite": -1 } })
+        return redirect(url_for("get_recipe", recipe_id=recipe_mdb['_id']))
+    
+    user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
+    user_favourites = user['favourites']
+    
+    return render_template('recipe.html', recipe=recipe_mdb, ingredient_sections=ingredient_sections, company_utensils = company_utensils, user_favourites=user_favourites)
 
-class addRecipe(Form):
-    image = URLField('Recipe Image', [validators.InputRequired()])
-    title = StringField('Title', [validators.Length(min=4, max=40), validators.InputRequired()])
-    description = TextAreaField('Description', [validators.Length(min=15, max=150), validators.InputRequired()])
-    cook_time = IntegerField('Cooking Time', [validators.InputRequired()])
-    prep_time = IntegerField('Preparation Time', [validators.InputRequired()])
-    serves = StringField('Servings', [validators.Length(min=1, max=12),validators.InputRequired()])
-    difficulty = SelectField('Difficulty', choices = [(1,'Easy'), (2,'Medium'), (3,'Hard')] )
-    is_vegetarian = BooleanField('Vegetarian')
-    is_vegan = BooleanField('Vegan')
-    ingredients = FieldList(StringField('Ingredients', [validators.InputRequired()]), min_entries=3)
-    method = FieldList(TextAreaField('Method', [validators.InputRequired()]), min_entries=3)
-    utensils = SelectMultipleField('Utensils')
-    other_utensils = StringField('Add Other Utensils', [validators.Length(min=4, max=40)])
-
-
+#@app.route('/add_to_favourites')
+    
+    
     
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
@@ -175,7 +148,10 @@ def add_recipe():
     choices = zip(utensil_numbers,company_utensils)
     form.utensils.choices = choices
     if request.method == "POST":
-        app.logger.info("Post")
+        recipes = mongo.db.recipes
+        recipes.insert_one(request.form.to_dict())
+        #image = request.form.get('image')
+        #title = request.form.get('image')
         return redirect(url_for('browse'))
     else:
         return render_template('add_recipe.html', form = form)

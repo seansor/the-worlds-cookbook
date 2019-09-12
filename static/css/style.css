@@ -131,5 +131,45 @@ form dl dt {
   align-self: center;
   font-size: 2.5rem;
 }
+.recipe-container input[type=checkbox] {
+  display: none;
+}
+.recipe-container #unfavourite {
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+  margin-top: 20px;
+  background: none;
+  border: none;
+  color: red;
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 50%;
+  box-shadow: 0px 5px 20px 1px #dc3545b5;
+}
+.recipe-container #unfavourite fa {
+  margin: 0;
+  height: 75%;
+  width: 75%;
+}
+.recipe-container #favourite {
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+  margin-top: 20px;
+  background: none;
+  border: none;
+  color: red;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 50%;
+  box-shadow: 0px 5px 20px 1px #dc3545b5;
+}
+.recipe-container #favourite fa {
+  margin: 0;
+  height: 75%;
+  width: 75%;
+}
 
 /*# sourceMappingURL=style.css.map */

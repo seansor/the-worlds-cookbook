@@ -160,6 +160,51 @@ form {
          align-self: center;
          font-size: 2.5rem;
       }
-
+   }
+   
+   input[type="checkbox"] {
+      display: none;
+   }
+   
+   #unfavourite {
+      height: 40px;
+      width: 40px;
+      margin-right: 10px;
+      margin-top: 20px;
+      background: none;
+      border: none;
+      color: red;
+      font-weight: bold;
+      padding: 5px;
+      border-radius: 50%;
+      box-shadow: 0px 5px 20px 1px #dc3545b5;
+      
+      fa {
+         margin: 0;
+         height: 75%;
+         width: 75%;
+      }
+   }
+   
+   #favourite {
+      height: 40px;
+      width: 40px;
+      margin-right: 10px;
+      margin-top: 20px;
+      background: none;
+      border: none;
+      color: red;
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 5px;
+      border-radius: 50%;
+      box-shadow: 0px 5px 20px 1px #dc3545b5;
+       
+      fa {
+         margin: 0;
+         height: 75%;
+         width: 75%;
+      }
+      
    }
 }

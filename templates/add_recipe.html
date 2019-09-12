@@ -65,7 +65,7 @@
         $("#addIngredient").click(function() {
             let i = 3;
             const newListItem = $("<li></li>");
-            let newItem = $("<input required type='text' value=''></input>")
+            let newItem = $("<input type='text' value=''></input>")
                 .attr("id", "ingredients-" + i)
                 .attr("name", "ingredients-" + i);
             $("#ingredients").append(newListItem);
@@ -76,28 +76,42 @@
         $("#addIngredientSection").click(function() {
             const newSection = $("<input required type='text' id='sectionName' value='' placeholder='Section Name'></input>");
             const addSection = $("<button type='button' id='addSection'>Add Section</button>");
-            $("#ingredients").parent().append(newSection, addSection);
+            $(".ingredients:last").append(newSection, addSection);
             
-             $("#addSection").click(function() {
-                console.log('test');
-                const sectionName = $( "#sectionName" ).val();
+            let sectionNum = 0;
+
+            $("#addSection").click(function() {
                 
-                const section_id  = sectionName.toLowerCase();
-                let dt = $("<dt><label for='" + section_id + "'>"+sectionName+"</label>");
+                sectionNum++;
+                
+                //console.log(section);
+                const sectionName = $("#sectionName").val();
+
+                const section_id = sectionName.toLowerCase();
+                let dt = $("<dt><label for='" + section_id + "'>" + sectionName + "</label>");
                 let dd = $("<dd></dd>");
                 let ul = $("<ul class='form-control' id='" + section_id + "'></ul>");
-                let li = $("<li></li>");
-                
-                $(".ingredients dd:last-of-type").append(dt).append(dd).append(ul);
-                for(let i=0; i<3; i++) {
-                    let input = $("<input required type='text' value=''></input>")
-                    .attr("id", section_id +"-"+ i)
-                    .attr("name", section_id +"-"+ i);
-                    $(".ingredients ul").append(li).append(input)
+
+
+                $(".ingredients:last").append(dt).append(dd);
+                $(".ingredients dd:last").append(ul);
+
+
+                for (let i = 0; i < 3; i++) {
+                    let li = $("<li></li>");
+                    let input = $("<input type='text' value=''></input>")
+                        .attr("id", section_id + "-" + i)
+                        .attr("name", "ingredient" + sectionNum + "-" + i);
+                    $(".ingredients ul:last").append(li);
+                    $(".ingredients ul:last li").each(function() {
+                        $(this).append(input);
+                    });
                 }
+                
+                $("#sectionName, #addSection").remove()
             });
         });
-        
+
         $("#addStep").click(function() {
             let i = 3;
             const newListItem = $("<li></li>");
