@@ -1,4 +1,4 @@
-from wtforms import Form, BooleanField, StringField, PasswordField, TextAreaField, IntegerField, SelectField, SelectMultipleField, FieldList, validators
+from wtforms import Form, BooleanField, StringField, PasswordField, TextAreaField, IntegerField, SelectField, SelectMultipleField, FieldList, FormField, validators
 from wtforms.fields.html5 import URLField
 
 class RegistrationForm(Form):
@@ -12,7 +12,7 @@ class RegistrationForm(Form):
     ])
     confirm = PasswordField('Repeat Password')
     accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
-    
+
     
 class addRecipe(Form):
     image = URLField('Recipe Image', [validators.InputRequired()])
@@ -27,4 +27,6 @@ class addRecipe(Form):
     ingredients = FieldList(StringField('Ingredients', [validators.InputRequired()]), min_entries=3)
     method = FieldList(TextAreaField('Method', [validators.InputRequired()]), min_entries=3)
     utensils = SelectMultipleField('Utensils')
-    other_utensils = StringField('Add Other Utensils', [validators.Length(min=4, max=40)])
+    other_utensils = StringField('Add Other Utensils', [validators.Length(min=4, max=40)])   
+
+    

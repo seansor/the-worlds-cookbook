@@ -34,11 +34,9 @@
             <div class="row">
                 <div class="col-md-2 ingredients">
                     {{ render_field(form.ingredients, class="form-control") }}
+                    <button type="button" class="addIngredient" id="ingredients-add">Add Ingredient</button>
                 </div>
-                <div class="col-md-2">
-                    <button type="button" id="addIngredient">Add Ingredient</button>
-                    <button type="button" id="addIngredientSection">Add New Section</button>
-                </div>
+                <button type="button" id="addIngredientSection">Add New Section</button>
                 <div class="col-md-6 method">
                     {{ render_field(form.method, class="form-control") }}
                 </div>
@@ -62,66 +60,93 @@
 {% endblock %} {% block customJQuery %}
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#addIngredient").click(function() {
-            let i = 3;
+        //Add ingredient to appropriate ingredient section
+        let sectionNum = 0;
+        $(".ingredients").on("click", ".addIngredient", function() {
+            //split button id to return ingredient list id
+            let ingredientListId = this.id.split('-')[0];
+            //get number of last ingredient in ingredient section so that appropriate name value can be added
+            let lastIngredientNum = parseInt(($("#" + ingredientListId).children('li:last-child').children('input').attr('id')).split('-')[1]);
+            //append new list element 
             const newListItem = $("<li></li>");
+            $("#" + ingredientListId).append(newListItem);
+            //append new input element within list element
             let newItem = $("<input type='text' value=''></input>")
-                .attr("id", "ingredients-" + i)
-                .attr("name", "ingredients-" + i);
-            $("#ingredients").append(newListItem);
-            $("#ingredients li:last-child").append(newItem);
-            i++;
+                .attr("id", ingredientListId + "-" + (lastIngredientNum + 1))
+                .attr("name", "ingredients" + sectionNum + "-" + (lastIngredientNum + 1));
+            $("#" + ingredientListId).children().last().append(newItem);
         });
 
+
+        //Add new ingredient section
         $("#addIngredientSection").click(function() {
+            //create temporary input box and button so that user can add name of new section
             const newSection = $("<input required type='text' id='sectionName' value='' placeholder='Section Name'></input>");
             const addSection = $("<button type='button' id='addSection'>Add Section</button>");
             $(".ingredients:last").append(newSection, addSection);
-            
-            let sectionNum = 0;
 
+            //increment section number each time a new section is added so that inputs can be named appropriately
+            sectionNum++;
+
+            //create new ingredient section with name from input box above
             $("#addSection").click(function() {
-                
-                sectionNum++;
-                
-                //console.log(section);
+                //get input for ingredient section name for section title/description tag
                 const sectionName = $("#sectionName").val();
 
+                //create section id from section name
                 const section_id = sectionName.toLowerCase();
+
+                //create description list elements
                 let dt = $("<dt><label for='" + section_id + "'>" + sectionName + "</label>");
                 let dd = $("<dd></dd>");
                 let ul = $("<ul class='form-control' id='" + section_id + "'></ul>");
 
-
+                //append description list elements
                 $(".ingredients:last").append(dt).append(dd);
                 $(".ingredients dd:last").append(ul);
 
-
+                //create and append list and input elements
                 for (let i = 0; i < 3; i++) {
                     let li = $("<li></li>");
                     let input = $("<input type='text' value=''></input>")
                         .attr("id", section_id + "-" + i)
-                        .attr("name", "ingredient" + sectionNum + "-" + i);
+                        .attr("name", "ingredients" + sectionNum + "-" + i);
                     $(".ingredients ul:last").append(li);
                     $(".ingredients ul:last li").each(function() {
                         $(this).append(input);
                     });
                 }
-                
-                $("#sectionName, #addSection").remove()
+
+                //create add ingredient button for new section
+                const addIngredient = $("<button type='button' class='addIngredient' id='" + section_id + "-add'>Add Ingredient</button>");
+                $(".ingredients").append(addIngredient);
+
+                //remove add section name dialog once new section added
+                $("#sectionName, #addSection").remove();
+
+                //return new section number value for use in future iterations of add functions
+                return sectionNum;
             });
         });
 
+        let numberSteps = 3;
+        // Add new steps to method
         $("#addStep").click(function() {
-            let i = 3;
-            const newListItem = $("<li></li>");
-            let newItem = $("<textarea required type='text' value=''></textarea>")
-                .attr("id", "method-" + i)
-                .attr("name", "method-" + i);
-            $("#method").append(newListItem);
-            $("#method li:last-child").append(newItem);
-            i++;
+            if (numberSteps < 10) {
+                const newListItem = $("<li></li>");
+                let newItem = $("<textarea required type='text' value=''></textarea>")
+                    .attr("id", "method-" + numberSteps)
+                    .attr("name", "method-" + numberSteps);
+                $("#method").append(newListItem);
+                $("#method li:last-child").append(newItem);
+                numberSteps++;
+                return numberSteps;
+            }
+            else {
+                alert("Please keep instructions to a maximum of 10 steps");
+            }
         });
+
     });
 </script>
 {% endblock %}
