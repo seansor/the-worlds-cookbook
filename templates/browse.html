@@ -21,9 +21,9 @@
                     <div class="info">
                         <span>
                             <i class="fa fa-clock-o"></i>
-                            {% if not recipe['total_time'][0] == '0' %}
+                            {% if recipe['total_time'][0] %}
                             {{ recipe['total_time'][0] }} Hr
-                                {% if not recipe['total_time'][1] == '0' %}
+                                {% if recipe['total_time'][1] %}
                                 {{ recipe['total_time'][1] }} Mins
                                 {% endif %}
                             {% else %}

@@ -14,9 +14,9 @@
                         <i class="fa fa-clock-o"></i>
                         <div class="col d-flex flex-column">
                             <div>Prep:
-                            {% if not recipe['prep_time'][0] == '0' %}
+                            {% if recipe['prep_time'][0] %}
                                 {{ recipe['prep_time'][0] }} Hr
-                                {% if not recipe['prep_time'][1] == '0' %}
+                                {% if recipe['prep_time'][1] %}
                                     {{ recipe['prep_time'][1] }} Mins
                                 {% endif %}
                             {% else %}
@@ -24,9 +24,9 @@
                             {% endif %}
                             </div>
                             <div>Cook:
-                            {% if not recipe['cook_time'][0] == '0' %}
+                            {% if recipe['cook_time'][0] %}
                                 {{ recipe['cook_time'][0] }} Hr
-                                {% if not recipe['cook_time'][1] == '0' %}
+                                {% if recipe['cook_time'][1] %}
                                     {{ recipe['cook_time'][1] }} Mins
                                 {% endif %}
                             {% else %}

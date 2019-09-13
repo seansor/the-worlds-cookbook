@@ -172,4 +172,12 @@ form dl dt {
   width: 75%;
 }
 
+#cuisine-choose {
+  display: none;
+}
+
+#main_ingredient-choose {
+  display: none;
+}
+
 /*# sourceMappingURL=style.css.map */

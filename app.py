@@ -233,6 +233,15 @@ def add_recipe():
             i+=1
         
         required_utensils=request.form.getlist('utensils')
+        required_utensils=[]
+        all_company_utensils=dict(utensil_choices)
+        selected_utensils=request.form.getlist('utensils')
+        for selected_utensil in selected_utensils:
+            required_utensil=all_company_utensils[int(selected_utensil)]
+            required_utensils.append(required_utensil)
+            
+        app.logger.info(required_utensils)
+        #required_utensils=request.form.getlist('utensils')
         
         mongo.db.recipes.insert_one({
             'image': image,
