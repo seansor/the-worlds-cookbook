@@ -1,15 +1,14 @@
 import math
 
 # Convert cooking time from minutes to hours & minutes  
-def time_to_hrs_and_mins(recipes):
+def time_to_hrs_and_mins(time_in_mins):
     hours_mins = []
-    
-    for recipe in recipes:
-        total_time = recipe['cook_time'] + recipe['prep_time']
-        if total_time < 60:
-            hours_mins.append((0,total_time))
-        else:
-            hours = math.floor(round(total_time/60))
-            minutes = total_time-(hours*60)
-            hours_mins.append((hours, minutes))
+    if time_in_mins < 60:
+        hours_mins.append(0)
+        hours_mins.append(time_in_mins)
+    else:
+        hours = math.floor(round(time_in_mins/60))
+        minutes = time_in_mins-(hours*60)
+        hours_mins.append(hours)
+        hours_mins.append(minutes)
     return hours_mins

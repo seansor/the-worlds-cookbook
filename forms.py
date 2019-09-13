@@ -21,6 +21,8 @@ class addRecipe(Form):
     cook_time = IntegerField('Cooking Time', [validators.InputRequired()])
     prep_time = IntegerField('Preparation Time', [validators.InputRequired()])
     serves = StringField('Servings', [validators.Length(min=1, max=12),validators.InputRequired()])
+    cuisine = SelectField('Cuisine')
+    main_ingredient = SelectField('Main Ingredient')
     difficulty = SelectField('Difficulty', choices = [(1,'Easy'), (2,'Medium'), (3,'Hard')] )
     is_vegetarian = BooleanField('Vegetarian')
     is_vegan = BooleanField('Vegan')

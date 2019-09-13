@@ -10,10 +10,10 @@
             </div>
             <div class="row">
                 <div class="col-md-3">
-                    {{ render_field(form.cook_time, class="form-control") }}
+                    {{ render_field(form.prep_time, class="form-control") }}
                 </div>
                 <div class="col-md-3">
-                    {{ render_field(form.prep_time, class="form-control") }}
+                    {{ render_field(form.cook_time, class="form-control") }}
                 </div>
                 <div class="col-md-3">
                     {{ render_field(form.serves, class="form-control") }}
@@ -21,6 +21,12 @@
 
             </div>
             <div class="row">
+                <div class="col-md-2">
+                    {{ render_field(form.cuisine, class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    {{ render_field(form.main_ingredient, class="form-control") }}
+                </div>
                 <div class="col-md-2">
                     {{ render_field(form.difficulty, class="form-control") }}
                 </div>
@@ -81,18 +87,16 @@
         //Add new ingredient section
         $("#addIngredientSection").click(function() {
             //create temporary input box and button so that user can add name of new section
-            const newSection = $("<input required type='text' id='sectionName' value='' placeholder='Section Name'></input>");
+            const newSection = $("<input required type='text' id='sectionName-"+sectionNum+"' name='sectionName-"+sectionNum+"' value='' placeholder='Section Name'></input>");
             const addSection = $("<button type='button' id='addSection'>Add Section</button>");
             $(".ingredients:last").append(newSection, addSection);
 
-            //increment section number each time a new section is added so that inputs can be named appropriately
-            sectionNum++;
-
             //create new ingredient section with name from input box above
-            $("#addSection").click(function() {
+            $("body").on('click','#addSection', function() {
+                console.log("#sectionName-"+sectionNum);
                 //get input for ingredient section name for section title/description tag
-                const sectionName = $("#sectionName").val();
-
+                const sectionName = $("#sectionName-"+sectionNum).val();
+                
                 //create section id from section name
                 const section_id = sectionName.toLowerCase();
 
@@ -120,9 +124,13 @@
                 //create add ingredient button for new section
                 const addIngredient = $("<button type='button' class='addIngredient' id='" + section_id + "-add'>Add Ingredient</button>");
                 $(".ingredients").append(addIngredient);
-
+                
                 //remove add section name dialog once new section added
-                $("#sectionName, #addSection").remove();
+                $("#sectionName-"+sectionNum).hide();
+                $("#addSection").hide();
+                
+                //increment section number each time a new section is added so that inputs can be named appropriately
+                sectionNum++;
 
                 //return new section number value for use in future iterations of add functions
                 return sectionNum;
