@@ -99,8 +99,7 @@
             <ul>
                 {% for utensil in recipe['required_utensils'] %}
                     {% if utensil in company_utensils %}
-                        <li>{{ utensil }}</li>
-                        <li><small>This item can be found at our store<a href="https://www.nisbets.co.uk/home-chef/_/a33-1">Visit</a></small></li>
+                        <li>{{ utensil }}<a href="{{ company_utensil_links[utensil] }}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a></li>
                     {% else %}
                         <li>{{ utensil }}</li>
                     {% endif %}

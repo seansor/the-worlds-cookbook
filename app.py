@@ -114,9 +114,15 @@ def get_recipe(recipe_id):
     recipe_mdb = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
     ingredient_sections = list(recipe_mdb['ingredients'].keys())
     
-    utensils_mdb = mongo.db.Utensils.find()
-    utensils_object_list = list(utensils_mdb)
-    company_utensils = utensils_object_list[0]['utensils']
+    company_utensils_mdb = mongo.db.company_utensils.find()
+    #convert cursor object to list
+    company_utensils_data = list(company_utensils_mdb)
+    #select just the utensils object (ignore _id object)
+    company_utensil_links = company_utensils_data[0]['utensils']
+    #select just utensil names (ignore link)
+    company_utensils = list(company_utensil_links.keys())
+    app.logger.info(company_utensil_links['food processor'])
+    
     
     if request.method == "POST":
         favourite= request.form.get('favourite')
@@ -138,15 +144,20 @@ def get_recipe(recipe_id):
     return render_template('recipe.html', recipe=recipe_mdb,
                             ingredient_sections=ingredient_sections,
                             company_utensils = company_utensils,
+                            company_utensil_links = company_utensil_links,
                             user_favourites=user_favourites)
     
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
 def add_recipe():
     form = addRecipe(request.form)
-    utensils_mdb = mongo.db.Utensils.find()
-    utensils_object_list = list(utensils_mdb)
-    company_utensils = (utensils_object_list[0]['utensils'])
+    company_utensils_mdb = mongo.db.company_utensils.find()
+    #convert cursor object to list
+    company_utensils_data = list(company_utensils_mdb)
+    #select just the utensils object (ignore _id object)
+    company_utensil_links = company_utensils_data[0]['utensils']
+    #select just utensil names (ignore link)
+    company_utensils = list(company_utensil_links.keys())
     company_utensils.sort()
     utensil_numbers = []
     for i in range(1, len(company_utensils)+1):
@@ -286,13 +297,17 @@ def add_recipe():
             method.append(method_step)
             i+=1
         
-        required_utensils=request.form.getlist('utensils')
         required_utensils=[]
         all_company_utensils=dict(utensil_choices)
         selected_utensils=request.form.getlist('utensils')
         for selected_utensil in selected_utensils:
             required_utensil=all_company_utensils[int(selected_utensil)]
             required_utensils.append(required_utensil)
+            
+        other_utensils_user_input = request.form.get('otherUtensils')
+        other_utensils = [word.strip() for word in other_utensils_user_input.split(',')]
+        for utensil in other_utensils:
+            required_utensils.append(utensil)
         
         mongo.db.recipes.insert_one({
             'image': image,

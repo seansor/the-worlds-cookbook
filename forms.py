@@ -30,6 +30,6 @@ class addRecipe(Form):
     ingredients = FieldList(StringField('Ingredients', [validators.InputRequired()]), min_entries=3)
     method = FieldList(TextAreaField('Method', [validators.InputRequired()]), min_entries=3)
     utensils = SelectMultipleField('Utensils')
-    other_utensils = StringField('Add Other Utensils', [validators.Length(min=4, max=40)])   
+    otherUtensils = StringField('Add Other Utensils', [validators.Length(min=4, max=40)])   
 
     
