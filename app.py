@@ -101,10 +101,12 @@ def logout():
 @is_logged_in
 def browse():
     recipes_mdb = mongo.db.recipes.find()
+    recipe_list = list(recipes_mdb)
+    recipe_list.sort(key=lambda x: x['favourite'], reverse=True)
     user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
     user_favourites = user['favourites']
        
-    return render_template('browse.html', recipes=recipes_mdb, user_favourites=user_favourites)
+    return render_template('browse.html', recipes=recipe_list, user_favourites=user_favourites)
   
         
 @app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
@@ -119,21 +121,24 @@ def get_recipe(recipe_id):
     if request.method == "POST":
         favourite= request.form.get('favourite')
         if favourite:
-            mongo.db.users.update_one({'_id': ObjectId(session['id'])}, { "$push": { "favourites": ObjectId(recipe_id) } })
-            mongo.db.recipes.update_one({'_id': ObjectId(recipe_id)}, { "$inc": { "favourite": 1 } })
+            mongo.db.users.update_one({'_id': ObjectId(session['id'])},
+            { "$push": { "favourites": ObjectId(recipe_id) } })
+            mongo.db.recipes.update_one({'_id': ObjectId(recipe_id)},
+            { "$inc": { "favourite": 1 } })
         else:
-            mongo.db.users.update_one({'_id': ObjectId(session['id'])}, { "$pull": { "favourites": ObjectId(recipe_id) } })
-            mongo.db.recipes.update_one({'_id': ObjectId(recipe_id)}, { "$inc": { "favourite": -1 } })
+            mongo.db.users.update_one({'_id': ObjectId(session['id'])},
+            { "$pull": { "favourites": ObjectId(recipe_id) } })
+            mongo.db.recipes.update_one({'_id': ObjectId(recipe_id)},
+            { "$inc": { "favourite": -1 } })
         return redirect(url_for("get_recipe", recipe_id=recipe_mdb['_id']))
     
     user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
     user_favourites = user['favourites']
     
-    return render_template('recipe.html', recipe=recipe_mdb, ingredient_sections=ingredient_sections, company_utensils = company_utensils, user_favourites=user_favourites)
-
-#@app.route('/add_to_favourites')
-    
-    
+    return render_template('recipe.html', recipe=recipe_mdb,
+                            ingredient_sections=ingredient_sections,
+                            company_utensils = company_utensils,
+                            user_favourites=user_favourites)
     
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
@@ -152,6 +157,7 @@ def add_recipe():
     main_ingredients_mdb = mongo.db.main_ingredient.find()
     main_ingredients_object_list = list(main_ingredients_mdb)
     main_ingredients = (main_ingredients_object_list[0]['ingredient'])
+    main_ingredients_id = (main_ingredients_object_list[0]['_id'])
     main_ingredients.sort()
     main_ingredients_numbers = []
     for i in range(1, len(main_ingredients)+1):
@@ -161,14 +167,34 @@ def add_recipe():
     
     cuisine_mdb = mongo.db.cuisine.find()
     cuisine_object_list = list(cuisine_mdb)
-    cuisine = (cuisine_object_list[0]['cuisine_type'])
-    cuisine.sort()
+    cuisines = (cuisine_object_list[0]['cuisine_type'])
+    cuisines_object_id = (cuisine_object_list[0]['_id'])
+    cuisines.sort()
     cuisine_numbers = []
-    for i in range(1, len(cuisine)+1):
+    for i in range(1, len(cuisines)+1):
         cuisine_numbers.append(i)
-    cuisine_choices = zip(cuisine_numbers,cuisine)
+    cuisine_choices = zip(cuisine_numbers,cuisines)
     form.cuisine.choices = cuisine_choices
     
+    meal_type_mdb = mongo.db.meal_type.find()
+    meal_type_object_list = list(meal_type_mdb)
+    meal_types = (meal_type_object_list[0]['type'])
+    meal_types.sort()
+    meal_type_numbers = []
+    for i in range(1, len(meal_types)+1):
+        meal_type_numbers.append(i)
+    meal_type_choices = zip(meal_type_numbers,meal_types)
+    form.meal_type.choices = meal_type_choices
+    
+    difficulty_mdb = mongo.db.difficulty.find()
+    difficulty_object_list = list(difficulty_mdb)
+    difficulty_levels = (difficulty_object_list[0]['level'])
+    difficulty_levels.sort()
+    difficulty_numbers = []
+    for i in range(1, len(difficulty_levels)+1):
+        difficulty_numbers.append(i)
+    difficulty_choices = zip(difficulty_numbers,difficulty_levels)
+    form.difficulty.choices = difficulty_choices
     
     if request.method == "POST":
         image = request.form.get('image')
@@ -184,9 +210,37 @@ def add_recipe():
         total_time = time_to_hrs_and_mins(total_mins)
         
         serves = request.form.get('serves')
-        cuisine = request.form.get('cuisine')
-        main_ingredient = request.form.get('main_ingredient')
-        difficulty = request.form.get('difficulty')
+        
+        if request.form.get('otherCuisine'):
+            selected_cuisine = request.form.get('otherCuisine')
+            if selected_cuisine.lower() not in cuisines:
+                mongo.db.cuisine.update_one({'_id': ObjectId(cuisines_object_id)},
+                { "$push": { "cuisine_type": selected_cuisine.lower() } })
+        else:
+            cuisine_number = request.form.get('cuisine')
+            all_cuisines = dict(cuisine_choices)
+            selected_cuisine = all_cuisines[int(cuisine_number)]
+            
+        if request.form.get('otherMain_ingredient'):
+            selected_main_ingredient = request.form.get('otherMain_ingredient')
+            if selected_main_ingredient.lower() not in main_ingredients:
+                mongo.db.main_ingredient.update_one({'_id': ObjectId(main_ingredients_id)},
+                { "$push": { "ingredient": selected_main_ingredient.lower() } })
+        else:
+            main_ingredient_number = request.form.get('main_ingredient')
+            all_main_ingredients = dict(main_ingredient_choices)
+            selected_main_ingredient = all_main_ingredients[int(main_ingredient_number)]
+        
+        
+        difficulty_number = request.form.get('difficulty')
+        all_difficulty_levels = dict(difficulty_choices)
+        selected_difficulty_level = all_difficulty_levels[int(difficulty_number)]
+        
+        meal_type_number = request.form.get('meal_type')
+        all_meal_types = dict(meal_type_choices)
+        selected_meal_type = all_meal_types[int(meal_type_number)]
+        
+        
         vegetarian = request.form.get('is_vegetarian')
         vegan = request.form.get('is_vegan')
         
@@ -239,9 +293,6 @@ def add_recipe():
         for selected_utensil in selected_utensils:
             required_utensil=all_company_utensils[int(selected_utensil)]
             required_utensils.append(required_utensil)
-            
-        app.logger.info(required_utensils)
-        #required_utensils=request.form.getlist('utensils')
         
         mongo.db.recipes.insert_one({
             'image': image,
@@ -251,9 +302,10 @@ def add_recipe():
             'cook_time':cook_time,
             'total_time': total_time,
             'serves':serves,
-            'cuisine':cuisine,
-            'main_ingredient':main_ingredient,
-            'difficulty':difficulty,
+            'cuisine':selected_cuisine,
+            'main_ingredient':selected_main_ingredient,
+            'meal_type':selected_meal_type,
+            'difficulty':selected_difficulty_level,
             'vegetarian':vegetarian,
             'vegan':vegan,
             'ingredients': ingredients,
