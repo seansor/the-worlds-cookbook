@@ -161,11 +161,11 @@ form {
          font-size: 2.5rem;
       }
    }
-   
+
    input[type="checkbox"] {
       display: none;
    }
-   
+
    #unfavourite {
       height: 40px;
       width: 40px;
@@ -178,14 +178,14 @@ form {
       padding: 5px;
       border-radius: 50%;
       box-shadow: 0px 5px 20px 1px #dc3545b5;
-      
+
       fa {
          margin: 0;
          height: 75%;
          width: 75%;
       }
    }
-   
+
    #favourite {
       height: 40px;
       width: 40px;
@@ -199,20 +199,107 @@ form {
       padding: 5px;
       border-radius: 50%;
       box-shadow: 0px 5px 20px 1px #dc3545b5;
-       
+
       fa {
          margin: 0;
          height: 75%;
          width: 75%;
       }
-      
+
    }
 }
 
 #cuisine-choose {
-   display:none;
+   display: none;
 }
 
 #main_ingredient-choose {
-   display:none;
+   display: none;
+}
+
+
+.tooltiptext {
+   visibility: hidden; //width: 120px;
+   background-color: #555;
+   color: #fff;
+   text-align: center;
+   border-radius: 6px;
+   padding: 5px 0;
+   position: absolute;
+   z-index: 1;
+   bottom: 50%;
+   left: 15%;
+   margin-left: -60px;
+   opacity: 0;
+   transition: opacity 0.3s;
+}
+
+
+
+.tooltiptext::after {
+   content: "";
+   position: absolute;
+   top: 120%;
+   left: 50%;
+   margin-left: -5px;
+   border-width: 5px;
+   border-style: solid;
+   border-color: #555 transparent transparent transparent;
+}
+
+.addItem {
+   width: 1.75rem;
+}
+
+.addItem:hover {
+   .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+   }
+}
+
+
+.selector {
+   dd {
+      display: inline-block;
+      min-width: 135px;
+   }
+}
+
+@media(min-width:376px) {
+   .checkbox {
+      padding-top: 35px;
+   }
+}
+
+.checkbox {
+   dt {
+      display: inline-block;
+   }
+   dd {
+      display: inline-block;
+      margin-left: 5px;
+      margin-bottom: -2px;
+      input {
+         width: 1rem;
+         height: 1rem;
+      }
+   }
+}
+
+#addIngredientSection {
+   width: 1.75rem;
+   height: 1.75rem;
+   margin-left: 5px;
+}
+
+#removeIngredientSection {
+   width: 1.75rem;
+   height: 1.75rem;
+   margin-left: 5px;
+}
+
+.sectionName {
+   display: block;
+   max-width: 175px;
 }

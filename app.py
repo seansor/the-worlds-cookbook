@@ -100,9 +100,15 @@ def logout():
 @app.route('/browse')
 @is_logged_in
 def browse():
+    '''
+    render browse page showing all recipes in database
+    sorted by default by most favourited
+    '''
     recipes_mdb = mongo.db.recipes.find()
     recipe_list = list(recipes_mdb)
+    # sort recipes according to most favourited
     recipe_list.sort(key=lambda x: x['favourite'], reverse=True)
+    
     user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
     user_favourites = user['favourites']
        
@@ -150,71 +156,90 @@ def get_recipe(recipe_id):
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
 def add_recipe():
+    '''
+    create add recipe form
+    process add recipe form inputs 
+    '''
+    # create wtForms object
     form = addRecipe(request.form)
+    
+    # retrieve company utensil names and associated links
     company_utensils_mdb = mongo.db.company_utensils.find()
-    #convert cursor object to list
     company_utensils_data = list(company_utensils_mdb)
-    #select just the utensils object (ignore _id object)
     company_utensil_links = company_utensils_data[0]['utensils']
-    #select just utensil names (ignore link)
     company_utensils = list(company_utensil_links.keys())
     company_utensils.sort()
+    # create tuples with utensil names for select list (required by wtforms)
     utensil_numbers = []
     for i in range(1, len(company_utensils)+1):
         utensil_numbers.append(i)
     utensil_choices = zip(utensil_numbers,company_utensils)
     form.utensils.choices = utensil_choices
     
+    # retrieve main ingredients
     main_ingredients_mdb = mongo.db.main_ingredient.find()
     main_ingredients_object_list = list(main_ingredients_mdb)
     main_ingredients = (main_ingredients_object_list[0]['ingredient'])
     main_ingredients_id = (main_ingredients_object_list[0]['_id'])
     main_ingredients.sort()
+    
+    # create tuples with main ingredients for select list (required by wtforms)
     main_ingredients_numbers = []
     for i in range(1, len(main_ingredients)+1):
         main_ingredients_numbers.append(i)
     main_ingredient_choices = zip(main_ingredients_numbers,main_ingredients)
     form.main_ingredient.choices = main_ingredient_choices
     
+    #retrieve cuisine types
     cuisine_mdb = mongo.db.cuisine.find()
     cuisine_object_list = list(cuisine_mdb)
     cuisines = (cuisine_object_list[0]['cuisine_type'])
     cuisines_object_id = (cuisine_object_list[0]['_id'])
     cuisines.sort()
+    
+    # create tuples with main ingredients for select list (required by wtforms)
     cuisine_numbers = []
     for i in range(1, len(cuisines)+1):
         cuisine_numbers.append(i)
     cuisine_choices = zip(cuisine_numbers,cuisines)
     form.cuisine.choices = cuisine_choices
     
+    # retrieve meal types
     meal_type_mdb = mongo.db.meal_type.find()
     meal_type_object_list = list(meal_type_mdb)
     meal_types = (meal_type_object_list[0]['type'])
     meal_types.sort()
     meal_type_numbers = []
+    
+    # create tuples with meal types for select list (required by wtforms)
     for i in range(1, len(meal_types)+1):
         meal_type_numbers.append(i)
     meal_type_choices = zip(meal_type_numbers,meal_types)
     form.meal_type.choices = meal_type_choices
     
+    # retrieve difficulty level
     difficulty_mdb = mongo.db.difficulty.find()
     difficulty_object_list = list(difficulty_mdb)
     difficulty_levels = (difficulty_object_list[0]['level'])
     difficulty_levels.sort()
+    
+    # create tuples with difficulty level for select list (required by wtforms)
     difficulty_numbers = []
     for i in range(1, len(difficulty_levels)+1):
         difficulty_numbers.append(i)
     difficulty_choices = zip(difficulty_numbers,difficulty_levels)
     form.difficulty.choices = difficulty_choices
     
+    # Parse data submitted by add_recipe form andsubmit to database
     if request.method == "POST":
         image = request.form.get('image')
         title = request.form.get('title')
         description = request.form.get('description')
         
         prep_mins = int(request.form.get('prep_time'))
-        cook_mins = int(request.form.get('cook_time'))
         prep_time = time_to_hrs_and_mins(prep_mins)
+        
+        cook_mins = int(request.form.get('cook_time'))
         cook_time = time_to_hrs_and_mins(cook_mins)
         
         total_mins = (prep_mins+cook_mins)
@@ -222,6 +247,8 @@ def add_recipe():
         
         serves = request.form.get('serves')
         
+        # Get selected cuisine
+        # If new cuisine added by user, add new item to database 
         if request.form.get('otherCuisine'):
             selected_cuisine = request.form.get('otherCuisine')
             if selected_cuisine.lower() not in cuisines:
@@ -231,7 +258,9 @@ def add_recipe():
             cuisine_number = request.form.get('cuisine')
             all_cuisines = dict(cuisine_choices)
             selected_cuisine = all_cuisines[int(cuisine_number)]
-            
+        
+        # Get selected main ingredient
+        # If new main ingredient added by user, add new item to database    
         if request.form.get('otherMain_ingredient'):
             selected_main_ingredient = request.form.get('otherMain_ingredient')
             if selected_main_ingredient.lower() not in main_ingredients:
@@ -242,11 +271,12 @@ def add_recipe():
             all_main_ingredients = dict(main_ingredient_choices)
             selected_main_ingredient = all_main_ingredients[int(main_ingredient_number)]
         
-        
+        # Get difficulty level selected
         difficulty_number = request.form.get('difficulty')
         all_difficulty_levels = dict(difficulty_choices)
         selected_difficulty_level = all_difficulty_levels[int(difficulty_number)]
         
+        # Get meal type selected
         meal_type_number = request.form.get('meal_type')
         all_meal_types = dict(meal_type_choices)
         selected_meal_type = all_meal_types[int(meal_type_number)]
@@ -255,7 +285,8 @@ def add_recipe():
         vegetarian = request.form.get('is_vegetarian')
         vegan = request.form.get('is_vegan')
         
-        '''retrieve and format ingredients'''
+        # retrieve and format ingredients
+        # get main ingredients
         main=[]
         i=0
         while request.form.get("ingredients-"+str(i)):
@@ -264,7 +295,8 @@ def add_recipe():
             i+=1
             
         ingredients = {"Main": main}
-            
+        
+        # if second ingredient section added, get section ingredients    
         if request.form.get("ingredients1-0"):
             section_name_1 = request.form.get('sectionName-1')
             side_1=[]
@@ -275,7 +307,8 @@ def add_recipe():
                 i+=1
             
             ingredients={"Main": main, section_name_1:side_1}
-                
+        
+        # if third ingredient section added, get section ingredients         
         if request.form.get("ingredients2-0"):
             section_name_2 = request.form.get('sectionName-2')
             side_2=[]
@@ -288,27 +321,30 @@ def add_recipe():
             ingredients={"Main": main, section_name_1:side_1, section_name_2:side_2} 
         
         
-        '''retrieve and format method steps'''  
+        #retrieve and format method steps
         method = []
-        
         i=0
         while request.form.get("method-"+str(i)):
             method_step= request.form.get("method-"+str(i))
             method.append(method_step)
             i+=1
         
+        # retrieve and format method steps
+        # get required utensils selected by user
         required_utensils=[]
         all_company_utensils=dict(utensil_choices)
         selected_utensils=request.form.getlist('utensils')
         for selected_utensil in selected_utensils:
             required_utensil=all_company_utensils[int(selected_utensil)]
             required_utensils.append(required_utensil)
-            
+        
+        # get other utensils input by user
         other_utensils_user_input = request.form.get('otherUtensils')
         other_utensils = [word.strip() for word in other_utensils_user_input.split(',')]
         for utensil in other_utensils:
             required_utensils.append(utensil)
         
+        # add recipe to database
         mongo.db.recipes.insert_one({
             'image': image,
             'title': title,
@@ -330,8 +366,6 @@ def add_recipe():
             'last_edited': datetime.now(),
             'favourite': 0
         })
-        
-        
         
         return redirect(url_for('browse'))
     else:

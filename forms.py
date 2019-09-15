@@ -29,7 +29,7 @@ class addRecipe(Form):
     is_vegan = BooleanField('Vegan')
     ingredients = FieldList(StringField('Ingredients', [validators.InputRequired()]), min_entries=3)
     method = FieldList(TextAreaField('Method', [validators.InputRequired()]), min_entries=3)
-    utensils = SelectMultipleField('Utensils')
+    utensils = SelectMultipleField('Required Utensils')
     otherUtensils = StringField('Add Other Utensils', [validators.Length(min=4, max=40)])   
 
     
