@@ -22,8 +22,17 @@ li label {
   margin: 0 auto;
 }
 
+form {
+  margin-bottom: 35px;
+}
 form dl dt {
   color: #fafafa;
+}
+
+.page-heading {
+  text-align: center;
+  color: #fafafa;
+  margin-top: 20px;
 }
 
 .form-control {
@@ -36,80 +45,164 @@ form dl dt {
   width: 100%;
 }
 
-.card {
+.browse-container .card {
+  font-size: 0.75rem;
   position: relative;
   display: flex;
-  flex-direction: column;
   background: #fff;
-  width: 250px;
-  height: 400px;
-  margin: 20px auto;
+  width: 90%;
+  height: 80px;
+  margin: 10px auto;
   box-shadow: 0px 0px 30px 2px #000;
 }
-.card .header {
-  background: url("http://img.taste.com.au/UZVXAdo7/taste/2016/11/chinese-egg-noodle-and-vegetable-stir-fry-94186-1.jpeg") no-repeat center;
-  background-size: cover;
-  height: 150px;
+@media (max-width: 767px) {
+  .browse-container .card .header-wrapper {
+    padding-right: 5px;
+  }
 }
-.card .header .icon a .fa-heart-o {
+.browse-container .card .header {
+  margin: 3px;
+  background-size: cover;
+  height: 70px;
+}
+.browse-container .card .header .icon a .fa-heart-o {
   position: absolute;
-  left: 85%;
-  bottom: 30.7%;
+  left: 270%;
+  bottom: 20%;
   background: #f53636;
   color: #fff;
-  font-size: 1.3em;
+  font-size: 1em;
   font-weight: bold;
   padding: 15px;
   border-radius: 50%;
   box-shadow: 0px 5px 30px 1px #f53636;
 }
-.card .text {
+@media (max-width: 767px) {
+  .browse-container .card .text-wrapper {
+    padding-left: 5px;
+  }
+}
+.browse-container .card .text {
+  color: #9B9B9B;
   max-height: 200px;
   display: flex;
   flex-direction: column;
 }
-.card .text .recipe-title {
+.browse-container .card .text .recipe-title {
+  font-size: 0.75rem;
   color: #212129;
   text-align: left;
   font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin: 5px 15px;
+  margin: 5px 0px;
 }
-.card .text .fa-clock-o {
+.browse-container .card .text .info {
+  font-size: 0.75rem;
+}
+.browse-container .card .text .fa-clock-o {
   color: #9B9B9B;
-  margin: 0 15px;
+  margin-left: 0;
 }
-.card .text .fa-users {
+.browse-container .card .text .fa-users {
+  margin-left: 15px;
   color: #9B9B9B;
 }
-.card .stars {
-  margin: 10px 15px;
+.browse-container .card .text .favourites {
+  font-size: 0.75rem;
 }
-.card .stars li a i {
-  color: #FFE500;
+.browse-container .card .text .favourites .fa {
+  margin-left: 0;
+  margin-right: 5px;
 }
-.card .description {
-  margin: 10px 15px;
+.browse-container .card .description {
+  text-align: auto;
+  display: none;
   font-size: 0.75rem;
   line-height: 1.5;
   text-overflow: ellipsis;
 }
-.card a.btn {
-  display: block;
+.browse-container .card a.btn {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  height: 10%;
+  width: 100%;
+  font-size: 100%;
   background: #E6A756;
   color: #fff;
-  position: relative;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   text-align: center;
-  margin-top: auto;
-  padding: 10px;
   transition: 250ms;
 }
-.card a.btn:hover {
+.browse-container .card a.btn:hover {
   background: #f53636;
   transition: 250ms;
+}
+@media (min-width: 768px) {
+  .browse-container .card {
+    font-size: 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    width: 90%;
+    height: 400px;
+    margin: 20px auto;
+    box-shadow: 0px 0px 30px 2px #000;
+  }
+  .browse-container .card .header {
+    background-size: cover;
+    height: 150px;
+  }
+  .browse-container .card .header .icon a .fa-heart-o {
+    left: 85%;
+    bottom: -60%;
+  }
+  .browse-container .card .text .recipe-title {
+    margin: 5px 15px;
+  }
+  .browse-container .card .text .info {
+    font-size: 0.75rem;
+  }
+  .browse-container .card .text .fa-clock-o {
+    color: #9B9B9B;
+    margin-left: 15px;
+  }
+  .browse-container .card .text .fa-users {
+    margin-left: 15px;
+    color: #9B9B9B;
+  }
+  .browse-container .card .text .favourites .fa {
+    margin-left: 15px;
+    margin-right: 5px;
+  }
+  .browse-container .card .description {
+    display: block;
+    margin: 10px 15px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+  }
+  .browse-container .card a.btn {
+    position: absolute;
+    bottom: 0;
+    height: 10%;
+    width: 100%;
+    font-size: 100%;
+    display: block;
+    background: #E6A756;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    transition: 250ms;
+  }
+  .browse-container .card a.btn:hover {
+    background: #f53636;
+    transition: 250ms;
+  }
 }
 
 .recipe-container {
@@ -243,6 +336,10 @@ form dl dt {
   opacity: 1;
 }
 
+#addSection {
+  margin-top: 5px;
+}
+
 .selector dd {
   display: inline-block;
   min-width: 135px;
@@ -306,6 +403,12 @@ form dl dt {
 
 .utensils {
   margin-top: 25px;
+}
+
+.footer {
+  position: absolute;
+  bottom: -30%;
+  width: 100%;
 }
 
 /*# sourceMappingURL=style.css.map */

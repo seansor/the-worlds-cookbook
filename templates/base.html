@@ -16,19 +16,19 @@
 
     <!-- Custom styles for this template -->
     <link href="../static/css/business-casual.min.css" rel="stylesheet">
-    
+
     <!--fontawesome-->
-    
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
-    
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+
     <!--Custom Styles-->
     <link href="../static/css/style.css" rel="stylesheet" />
 
 </head>
 
 <body>
-    {% include 'includes/_messages.html' %} 
-    
+    {% include 'includes/_messages.html' %}
+
 
     <h1 class="site-heading text-center text-white d-none d-lg-block">
         <span class="site-heading-upper text-primary mb-3">Sponsored By SOR Cooking Equipment</span>
@@ -50,14 +50,14 @@
                     </a>
                     </li>
                     <li class="nav-item dropdown {% if active_page == 'recipe' %}active{% endif %} px-lg-4">
-                    <a class="nav-link dropdown-toggle text-uppercase text-expanded" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle text-uppercase text-expanded" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Recipes
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{url_for('browse')}}">Browse</a>
-                        <a class="dropdown-item" href="#">My Recipes</a>
-                        <a class="dropdown-item" href="{{url_for('add_recipe')}}">Add Recipe</a>
-                    </div>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{url_for('browse')}}">Browse</a>
+                            <a class="dropdown-item" href="#">My Recipes</a>
+                            <a class="dropdown-item" href="{{url_for('add_recipe')}}">Add Recipe</a>
+                        </div>
                     </li>
                     {% if not session['logged_in'] %}
                     <li class="nav-item {% if active_page == 'register' %}active{% endif %} px-lg-4">
@@ -67,29 +67,31 @@
                         <a class="nav-link text-uppercase text-expanded" href="{{url_for('login')}}">Login</a>
                     </li>
                     {% else %}
-                    
+
                     <li class="nav-item px-lg-4">
                         <a class="nav-link text-uppercase text-expanded" href="{{url_for('logout')}}">Logout</a>
                     </li>
                     <span class="navbar-text px-lg-4">
                       <em>Welcome {{session.name}}</em>
-                    </span>
-                    {% endif %}
+                    </span> {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
+
+    {% block content %} {% endblock %}
     
-    {% block content %} 
-    
-    {% endblock %}
+    <footer class="footer text-faded text-center py-5">
+        <div class="container">
+            <p class="m-0 small">Copyright &copy; Your Website 2019</p>
+        </div>
+    </footer>
 
     <!-- Bootstrap core JavaScript -->
     <script src="../static/vendor/jquery/jquery.min.js"></script>
     <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    
-    {% block customJQuery %}
-    {% endblock %}
+
+    {% block customJQuery %} {% endblock %}
 
 </body>
 

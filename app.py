@@ -111,6 +111,8 @@ def browse():
     
     user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
     user_favourites = user['favourites']
+    
+    mongo.db.recipes.remove({'title': "test"})
        
     return render_template('browse.html', recipes=recipe_list, user_favourites=user_favourites)
   
@@ -128,6 +130,7 @@ def get_recipe(recipe_id):
     author = mongo.db.users.find_one({'_id': ObjectId(author_id) })
     fullname = author['firstname']+' '+author['lastname']
     
+    app.logger.info(recipe_mdb['last_edited'])
     last_edited = recipe_mdb['last_edited'].strftime("%d-%m-%y")
     
     # retrieve company utensil names and associated links

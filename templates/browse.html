@@ -1,25 +1,32 @@
 {% extends 'base.html' %} {% set active_page = "recipe" %} {% block content %}
 
-<h1>Browse Recipes</h1>
 
-<div class="container">
+
+<div class="container browse-container">
+    <h1 class="page-heading">Browse Recipes</h1>
     <div class="row">
         {% for recipe in recipes %}
-        <div class="col-6 col-md-4 col-lg-3">
+        <div class="col-md-4 col-lg-3">
             <div class="card">
-                <div class="header" style="background-image: url({{ recipe['image'] }})">
-                    {% if recipe['_id'] in user_favourites %}
-                    <div class="icon">
-                        <a href="#"><i class="fa fa-heart-o"></i></a>
+                <div class="row">
+                    <div class="col-4 col-md-12 header-wrapper">
+                        <a href="{{ url_for('get_recipe', recipe_id=recipe['_id'])}}">
+                            <div class="header" style="background-image: url({{ recipe['image'] }})">
+                                {% if recipe['_id'] in user_favourites %}
+                                <div class="icon">
+                                    <a href="#"><i class="fa fa-heart-o"></i></a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </a>
                     </div>
-                    {% endif %}
-                </div>
-                <div class="text">
-                    <h6 class="recipe-title">
-                        {{ recipe['title'] }}
-                    </h6>
-                    <div class="info">
-                        <span>
+                    <div class="col-8 col-md-12 text-wrapper">
+                        <div class="text">
+                            <h6 class="recipe-title">
+                                {{ recipe['title'] }}
+                            </h6>
+                            <div class="info">
+                                <span>
                             <i class="fa fa-clock-o"></i>
                             {% if recipe['total_time'][0] %}
                             {{ recipe['total_time'][0] }} Hr
@@ -30,18 +37,24 @@
                             {{ recipe['total_time'][1] }} Mins
                             {% endif %}
                         </span>
-                        <span>
+                                <span>
                             <i class="fa fa-users"></i>
                              Serves {{ recipe['serves'] }}
                         </span>
+                            </div>
+                            <div class="favourites">
+                                <span><i class="fa fa-heart" aria-hidden="true"></i>{{ recipe['favourite'] }}</span>
+                            </div>
+                            <p class="description">{{ recipe['description'] }}
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <span><i class="fa fa-heart" aria-hidden="true">{{ recipe['favourite'] }}</i> </span>
-                    </div>
-                    <p class="description">{{ recipe['description'] }}
-                    </p>
                 </div>
                 <a href="{{ url_for('get_recipe', recipe_id=recipe['_id'])}}" class="btn">Let's Cook!</a>
             </div>
         </div>
-        {%endfor%} {% endblock %}
+        {%endfor%}
+    </div>
+</div>
+
+{% endblock %} {% block customJQuery %} {% endblock %}
