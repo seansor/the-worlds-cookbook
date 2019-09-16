@@ -41,7 +41,7 @@
                     <p class="description">{{ recipe['description'] }}
                     </p>
                 </div>
-                <a href="{{ url_for('get_recipe', recipe_id=recipe['_id']) }}" class="btn">Let's Cook!</a>
+                <a href="{{ url_for('get_recipe', recipe_id=recipe['_id'])}}" class="btn">Let's Cook!</a>
             </div>
         </div>
         {%endfor%} {% endblock %}

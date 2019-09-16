@@ -23,23 +23,31 @@
                 <div class="col-md-3 selector">
                     {{ render_field(form.cuisine, class="form-control item-selector") }}
                     <button type="button" class="addItem" id="cuisine-add">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        <span class="tooltiptext">Add Cuisine</span>
+                        <div class="button-icon--wrapper">
+                            <span class="tooltiptext">Add Cuisine</span>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
                     </button>
                     <button type="button" class="addItem" id="cuisine-choose">
-                        <i class="fa fa-list" aria-hidden="true"></i>
-                        <span class="tooltiptext">Choose from list</span>
+                        <div class="button-icon--wrapper">
+                            <span class="tooltiptext">Choose from list</span>
+                            <i class="fa fa-list" aria-hidden="true"></i>
+                        </div>
                     </button>
                 </div>
                 <div class="col-md-3 selector">
                     {{ render_field(form.main_ingredient, class="form-control item-selector") }}
                     <button type="button" class="addItem" id="main_ingredient-add">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        <span class="tooltiptext">Add Ingredient</span>
+                        <div class="button-icon--wrapper">
+                            <span class="tooltiptext">Add Ingredient</span>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
                     </button>
                     <button type="button" class="addItem" id="main_ingredient-choose">
-                        <i class="fa fa-list" aria-hidden="true"></i>
-                        <span class="tooltiptext">Choose from list</span>
+                        <div class="button-icon--wrapper">
+                            <span class="tooltiptext">Choose from list</span>
+                            <i class="fa fa-list" aria-hidden="true"></i>
+                        </div>
                     </button>
                 </div>
                 <div class="col-md-3 selector">
@@ -57,25 +65,35 @@
                     {{ render_field(form.is_vegan, class="form-control") }}
                 </div>
             </div>
-            <div class="row">
+            <div class="row ingredients-and-method">
                 <div class="col-md-3 ingredients">
                     {{ render_field(form.ingredients, class="form-control") }}
                     <button type="button" class="addItem addIngredient" id="ingredients-add">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        <span class="tooltiptext">Add Ingredient</span>
+                        <div class='button-icon--wrapper'>
+                            <span class="tooltiptext">Add Ingredient</span>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
                     </button>
                     <button type="button" class="addItem" id="addIngredientSection">
-                        <i class="fa fa-plus-square" aria-hidden="true"></i>
-                        <span class="tooltiptext">Add Ingredient Section</span>
+                        <div class='button-icon--wrapper'>
+                            <span class="tooltiptext">Add Ingredient Section</span>
+                            <i class='fa fa-list-ul' aria-hidden='true'></i>
+                            <i class='fa fa-plus-circle' aria-hidden='true'></i>
+                        </div>
                     </button>
                 </div>
                 <div class="col-md-6 method">
                     {{ render_field(form.method, class="form-control") }}
-                    <button type="button" id="addStep">Add Step</button>
+                    <button type="button" class="addItem" id="addStep">
+                        <div class="button-icon--wrapper">
+                            <span class="tooltiptext">Add Step</span>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
+                    </button>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row utensils">
+                <div class="col-md-3">
                     {{ render_field(form.utensils, class="form-control") }}
                 </div>
                 <div class="col-md-6">
@@ -175,11 +193,11 @@
             //remove add section name dialog once new section added
             $("#sectionName-" + sectionNum).hide();
             $("#addSection").remove();
-            
-            if($("#removeIngredientSection")){
+
+            if ($("#removeIngredientSection")) {
                 $("#removeIngredientSection").remove();
             }
-            
+
             console.log("#sectionName-" + sectionNum);
             //get input for ingredient section name for section title/description tag
             const sectionName = $("#sectionName-" + sectionNum).val();
@@ -209,39 +227,39 @@
             }
 
             //create add ingredient button for new section
-            const addIngredient = $("<button type='button' class='addItem addIngredient' id='" + section_id + "-add'><i class='fa fa-plus' aria-hidden='true'></i><span class='tooltiptext'>Add Ingredient</span></button>");
+            const addIngredient = $("<button type='button' class='addItem addIngredient' id='" + section_id + "-add'><div class='button-icon--wrapper'><span class='tooltiptext'>Add Ingredient</span><i class='fa fa-plus' aria-hidden='true'></i></div></button>");
             $(".ingredients").append(addIngredient);
 
-            //add new "add section" button
-            let addIngredientSection = $("<button type='button' class='addItem' id='addIngredientSection'><i class='fa fa-plus-square' aria-hidden='true'></i><span class='tooltiptext'>Add Ingredient Section</span></button>");
-            if(sectionNum<2){
+            //add new "add ingredient section" button
+            let addIngredientSection = $("<button type='button' class='addItem' id='addIngredientSection'><div class='button-icon--wrapper'><span class='tooltiptext'>Add Ingredient Section</span><i class='fa fa-list-ul' aria-hidden='true'></i><i class='fa fa-plus-circle' aria-hidden='true'></i></div></button>");
+            if (sectionNum < 2) {
                 $(".ingredients").append(addIngredientSection);
             }
             //add 'remove ingredient section' button
-            const removeIngredientSection = $("<button type='button' class='addItem' id='removeIngredientSection'><i class='fa fa-minus-square' aria-hidden='true'></i><span class='tooltiptext'>Remove Ingredient Section</span></button>");
+            const removeIngredientSection = $("<button type='button' class='addItem' id='removeIngredientSection'><div class='button-icon--wrapper'><span class='tooltiptext'>Remove Ingredient Section</span><i class='fa fa-list-ul' aria-hidden='true'></i><i class='fa fa-minus-circle' aria-hidden='true'></i></div></button>");
             $(".ingredients").append(removeIngredientSection);
 
 
             //return new section number value for use in future iterations of add functions
             return sectionNum;
-            
+
             //return "add ingredient section" button for use in remove ingredient section function
             return addIngredientSection;
         });
-        
-        $(".ingredients").on('click', '#removeIngredientSection',  function() {
+
+        $(".ingredients").on('click', '#removeIngredientSection', function() {
             $(this).prev("button").remove();
             $(this).prev("button").remove();
             $(this).prev("dd").remove();
             $(this).prev("dt").remove();
             $(this).prev("input").remove();
             $(this).remove();
-            
-            let addIngredientSection = $("<button type='button' class='addItem' id='addIngredientSection'><i class='fa fa-plus-square' aria-hidden='true'></i><span class='tooltiptext'>Add Ingredient Section</span></button>");
-            
+
+            let addIngredientSection = $("<button type='button' class='addItem' id='addIngredientSection'><div class='button-icon--wrapper'><span class='tooltiptext'>Add Ingredient Section</span><i class='fa fa-plus-square' aria-hidden='true'></i></div></button>");
+
             //re-add 'add ingredient section' button to previous section
             $(".ingredients").append(addIngredientSection);
-            
+
             sectionNum--;
             return sectionNum;
         });

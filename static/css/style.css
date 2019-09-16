@@ -55,13 +55,13 @@ form dl dt {
   position: absolute;
   left: 85%;
   bottom: 30.7%;
-  background: #17BEBB;
+  background: #f53636;
   color: #fff;
   font-size: 1.3em;
   font-weight: bold;
   padding: 15px;
   border-radius: 50%;
-  box-shadow: 0px 5px 30px 1px #17BEBB;
+  box-shadow: 0px 5px 30px 1px #f53636;
 }
 .card .text {
   max-height: 200px;
@@ -108,7 +108,7 @@ form dl dt {
   transition: 250ms;
 }
 .card a.btn:hover {
-  background: #17BEBB;
+  background: #f53636;
   transition: 250ms;
 }
 
@@ -122,54 +122,80 @@ form dl dt {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  margin-top: 10px;
 }
-.recipe-container .recipe-info .fa {
+.recipe-container .recipe-title {
+  margin-top: 10px;
+}
+.recipe-container .recipe-meta {
+  margin-bottom: 15px;
+}
+.recipe-container .recipe-meta .fa {
+  margin-right: 10px;
+}
+.recipe-container .recipe-details {
+  margin-bottom: 15px;
+}
+.recipe-container .recipe-details .fa {
   font-size: 2rem;
-  margin-right: 3px;
+  margin-right: 15px;
+  color: #2d8c6c;
 }
-.recipe-container .recipe-info .fa-clock-o {
+.recipe-container .recipe-details .fa-clock-o {
   align-self: center;
   font-size: 2.5rem;
+}
+.recipe-container .recipe-description {
+  margin: 0;
+  margin-bottom: 15px;
 }
 .recipe-container input[type=checkbox] {
   display: none;
 }
 .recipe-container #unfavourite {
+  position: relative;
   height: 40px;
   width: 40px;
   margin-right: 10px;
-  margin-top: 20px;
-  background: none;
-  border: none;
-  color: red;
+  font-size: 1.3em;
   font-weight: bold;
-  padding: 5px;
+  padding: 15px;
   border-radius: 50%;
-  box-shadow: 0px 5px 20px 1px #dc3545b5;
+  background: #f53636;
+  color: #fff;
+  box-shadow: 0px 5px 30px 1px #f53636;
+  border: none;
 }
-.recipe-container #unfavourite fa {
-  margin: 0;
-  height: 75%;
-  width: 75%;
+.recipe-container #unfavourite .fa {
+  position: absolute;
+  right: 23%;
+  bottom: 20%;
 }
 .recipe-container #favourite {
+  position: relative;
   height: 40px;
   width: 40px;
   margin-right: 10px;
-  margin-top: 20px;
-  background: none;
-  border: none;
-  color: red;
-  font-size: 1.5rem;
+  font-size: 1.3em;
   font-weight: bold;
-  padding: 5px;
+  padding: 15px;
   border-radius: 50%;
-  box-shadow: 0px 5px 20px 1px #dc3545b5;
+  background: #fff;
+  color: #f53636;
+  box-shadow: 0px 5px 30px 1px #fff;
+  border: solid 1px #f53636;
 }
-.recipe-container #favourite fa {
-  margin: 0;
-  height: 75%;
-  width: 75%;
+.recipe-container #favourite .fa {
+  position: absolute;
+  right: 23%;
+  bottom: 20%;
+}
+.recipe-container .recipe-ingredients {
+  padding-left: 30px;
+  padding-top: 15px;
+}
+.recipe-container ol {
+  padding-left: 15px;
 }
 
 #cuisine-choose {
@@ -182,16 +208,17 @@ form dl dt {
 
 .tooltiptext {
   visibility: hidden;
+  width: 85px;
   background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 6px;
-  padding: 5px 0;
+  padding: 5px 5px;
   position: absolute;
   z-index: 1;
-  bottom: 50%;
-  left: 15%;
-  margin-left: -60px;
+  bottom: 185%;
+  left: 185%;
+  margin-left: -75px;
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -254,6 +281,31 @@ form dl dt {
 .sectionName {
   display: block;
   max-width: 175px;
+  margin-top: 10px;
+}
+
+.button-icon--wrapper {
+  position: relative;
+}
+.button-icon--wrapper .fa-plus-circle {
+  position: absolute;
+  font-size: 0.75rem;
+  right: 1px;
+  bottom: 14px;
+}
+.button-icon--wrapper .fa-minus-circle {
+  position: absolute;
+  font-size: 0.75rem;
+  right: 1px;
+  bottom: 14px;
+}
+
+.ingredients-and-method {
+  margin-top: 25px;
+}
+
+.utensils {
+  margin-top: 25px;
 }
 
 /*# sourceMappingURL=style.css.map */

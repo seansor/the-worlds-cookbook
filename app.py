@@ -117,19 +117,27 @@ def browse():
         
 @app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
 def get_recipe(recipe_id):
+    '''
+    Get selected recipe
+    Allow signed in users to favourite recipes
+    '''
     recipe_mdb = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
     ingredient_sections = list(recipe_mdb['ingredients'].keys())
     
+    author_id = recipe_mdb['author']
+    author = mongo.db.users.find_one({'_id': ObjectId(author_id) })
+    fullname = author['firstname']+' '+author['lastname']
+    
+    last_edited = recipe_mdb['last_edited'].strftime("%d-%m-%y")
+    
+    # retrieve company utensil names and associated links
     company_utensils_mdb = mongo.db.company_utensils.find()
-    #convert cursor object to list
     company_utensils_data = list(company_utensils_mdb)
-    #select just the utensils object (ignore _id object)
     company_utensil_links = company_utensils_data[0]['utensils']
-    #select just utensil names (ignore link)
     company_utensils = list(company_utensil_links.keys())
-    app.logger.info(company_utensil_links['food processor'])
     
-    
+    # add/remove recipe from user favourites
+    # count number of times recipe has been favourited
     if request.method == "POST":
         favourite= request.form.get('favourite')
         if favourite:
@@ -151,7 +159,7 @@ def get_recipe(recipe_id):
                             ingredient_sections=ingredient_sections,
                             company_utensils = company_utensils,
                             company_utensil_links = company_utensil_links,
-                            user_favourites=user_favourites)
+                            user_favourites=user_favourites, author=fullname, last_edited=last_edited)
     
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
