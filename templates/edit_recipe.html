@@ -6,7 +6,9 @@
         <dl>
             <div class="row">
                 <div class="col-md-9">
-                    {{ render_field(form.image, class="form-control", placeholder="Enter Image URL") }} {{ render_field(form.title, class="form-control") }} {{ render_field(form.description, class="form-control") }}
+                    {{ render_field(form.image, class="form-control", placeholder="Enter Image URL") }} 
+                    {{ render_field(form.title, class="form-control") }} 
+                    {{ render_field(form.description, class="form-control") }}
                 </div>
             </div>
             <div class="row">
@@ -82,6 +84,31 @@
                             <i class='fa fa-plus-circle' aria-hidden='true'></i>
                         </div>
                     </button>
+                    {% if recipe_sections[1] %}
+                    {{ render_field(form.ingredients1, class="form-control") }}
+                    <button type="button" class="addItem addIngredient" id="ingredients-add">
+                        <div class='button-icon--wrapper'>
+                            <span class="tooltiptext">Add Ingredient</span>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
+                    </button>
+                    <button type="button" class="addItem" id="addIngredientSection">
+                        <div class='button-icon--wrapper'>
+                            <span class="tooltiptext">Add Ingredient Section</span>
+                            <i class='fa fa-list-ul' aria-hidden='true'></i>
+                            <i class='fa fa-plus-circle' aria-hidden='true'></i>
+                        </div>
+                    </button>
+                    {% if recipe_sections[2] %}
+                    {{ render_field(form.ingredients2, class="form-control") }}
+                    <button type="button" class="addItem addIngredient" id="ingredients-add">
+                        <div class='button-icon--wrapper'>
+                            <span class="tooltiptext">Add Ingredient</span>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
+                    </button>
+                    {% endif %}
+                    {% endif %}
                 </div>
                 <div class="col-md-6 method">
                     {{ render_field(form.method, class="form-control") }}
@@ -95,14 +122,14 @@
             </div>
             <div class="row utensils">
                 <div class="col-md-3">
-                    {{ render_field(form.utensils, class="form-control") }}
+                   {{ render_field(form.utensils, class="form-control") }}
                 </div>
                 <div class="col-md-6">
                     {{ render_field(form.otherUtensils, class="form-control", placeholder="Add comma separated list of utensils, e.g. knife, fork, spoon") }}
                 </div>
             </div>
         </dl>
-        <input type=submit value='Add Recipe' class="btn btn-primary">
+        <input type=submit value='Update Recipe' class="btn btn-primary">
     </form>
 </div>
 

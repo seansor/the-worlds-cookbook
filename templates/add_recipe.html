@@ -204,7 +204,7 @@
             const sectionName = $("#sectionName-" + sectionNum).val();
 
             //create section id from section name
-            const section_id = sectionName.toLowerCase();
+            const section_id = "ingredients"+sectionNum//sectionName.toLowerCase();
 
             //create description list elements
             let dt = $("<dt><label for='" + section_id + "'>" + sectionName + "</label>");

@@ -39,13 +39,17 @@ class editRecipe(Form):
     cook_time = IntegerField('Cooking Time', [validators.InputRequired()])
     prep_time = IntegerField('Preparation Time', [validators.InputRequired()])
     serves = StringField('Servings', [validators.Length(min=1, max=12),validators.InputRequired()])
+    
+    
     cuisine = SelectField('Cuisine')
     main_ingredient = SelectField('Main Ingredient')
     meal_type = SelectField('Meal Type')
     difficulty = SelectField('Difficulty')
     is_vegetarian = BooleanField('Vegetarian')
     is_vegan = BooleanField('Vegan')
-    ingredients = FieldList(StringField('Ingredients', [validators.InputRequired()]), min_entries=3)
+    ingredients = FieldList(StringField('Ingredients', [validators.InputRequired()]), min_entries=0)
+    ingredients1 = FieldList(StringField('Ingredients1', [validators.InputRequired()]), min_entries=0)
+    ingredients2 = FieldList(StringField('Ingredients2', [validators.InputRequired()]), min_entries=0)
     method = FieldList(TextAreaField('Method', [validators.InputRequired()]), min_entries=3)
     utensils = SelectMultipleField('Required Utensils')
     otherUtensils = StringField('Add Other Utensils', [validators.Length(min=4, max=40)])
