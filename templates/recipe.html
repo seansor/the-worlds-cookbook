@@ -65,6 +65,11 @@
                         <span><button id="favourite" href="#"><i class="fa fa-heart-o"></i></button>Add to Favourites</span> {% endif %}
                     </form>
                 </div>
+                <div class="col-md-6">
+                    <form action="{{url_for('edit_recipe', recipe_id=recipe['_id'])}}">
+                        <input type="submit" value="Edit" />
+                    </form>
+                </div>
             </div>
         </div>
     </div>

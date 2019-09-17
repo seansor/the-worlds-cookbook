@@ -9,6 +9,17 @@
   box-sizing: border-box;
 }
 
+#page-container {
+  position: relative;
+  min-height: 100vh;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+#page-content-wrap {
+  padding-bottom: 118px;
+}
+
 ul {
   list-style-type: none;
 }
@@ -161,6 +172,7 @@ form dl dt {
     bottom: -60%;
   }
   .browse-container .card .text .recipe-title {
+    font-size: 1.1rem;
     margin: 5px 15px;
   }
   .browse-container .card .text .info {
@@ -407,8 +419,8 @@ form dl dt {
 
 .footer {
   position: absolute;
-  bottom: -30%;
   width: 100%;
+  bottom: 0;
 }
 
 /*# sourceMappingURL=style.css.map */

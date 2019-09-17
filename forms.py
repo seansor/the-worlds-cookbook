@@ -32,4 +32,21 @@ class addRecipe(Form):
     utensils = SelectMultipleField('Required Utensils')
     otherUtensils = StringField('Add Other Utensils', [validators.Length(min=4, max=40)])   
 
+class editRecipe(Form):
+    image = URLField('Recipe Image', [validators.InputRequired()])
+    title = StringField('Title', [validators.Length(min=4, max=40), validators.InputRequired()])
+    description = TextAreaField('Description', [validators.Length(min=15, max=150), validators.InputRequired()])
+    cook_time = IntegerField('Cooking Time', [validators.InputRequired()])
+    prep_time = IntegerField('Preparation Time', [validators.InputRequired()])
+    serves = StringField('Servings', [validators.Length(min=1, max=12),validators.InputRequired()])
+    cuisine = SelectField('Cuisine')
+    main_ingredient = SelectField('Main Ingredient')
+    meal_type = SelectField('Meal Type')
+    difficulty = SelectField('Difficulty')
+    is_vegetarian = BooleanField('Vegetarian')
+    is_vegan = BooleanField('Vegan')
+    ingredients = FieldList(StringField('Ingredients', [validators.InputRequired()]), min_entries=3)
+    method = FieldList(TextAreaField('Method', [validators.InputRequired()]), min_entries=3)
+    utensils = SelectMultipleField('Required Utensils')
+    otherUtensils = StringField('Add Other Utensils', [validators.Length(min=4, max=40)])
     

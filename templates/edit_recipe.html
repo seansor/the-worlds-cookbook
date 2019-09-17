@@ -1,0 +1,289 @@
+{% extends 'base.html' %} {% block content %} {% from "/includes/_formhelpers.html" import render_field %}
+
+<div class="container">
+    <h1 class="page-heading">Add Recipe</h1>
+    <form action="#" method=["GET","POST"]>
+        <dl>
+            <div class="row">
+                <div class="col-md-9">
+                    {{ render_field(form.image, class="form-control", placeholder="Enter Image URL") }} {{ render_field(form.title, class="form-control") }} {{ render_field(form.description, class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    {{ render_field(form.prep_time, class="form-control", placeholder="Time in minutes") }}
+                </div>
+                <div class="col-md-3">
+                    {{ render_field(form.cook_time, class="form-control", placeholder="Time in minutes") }}
+                </div>
+                <div class="col-md-3">
+                    {{ render_field(form.serves, class="form-control", placeholder="Enter Range, e.g. 4-6") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 selector">
+                    {{ render_field(form.cuisine, class="form-control item-selector") }}
+                    <button type="button" class="addItem" id="cuisine-add">
+                        <div class="button-icon--wrapper">
+                            <span class="tooltiptext">Add Cuisine</span>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
+                    </button>
+                    <button type="button" class="addItem" id="cuisine-choose">
+                        <div class="button-icon--wrapper">
+                            <span class="tooltiptext">Choose from list</span>
+                            <i class="fa fa-list" aria-hidden="true"></i>
+                        </div>
+                    </button>
+                </div>
+                <div class="col-md-3 selector">
+                    {{ render_field(form.main_ingredient, class="form-control item-selector") }}
+                    <button type="button" class="addItem" id="main_ingredient-add">
+                        <div class="button-icon--wrapper">
+                            <span class="tooltiptext">Add Ingredient</span>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
+                    </button>
+                    <button type="button" class="addItem" id="main_ingredient-choose">
+                        <div class="button-icon--wrapper">
+                            <span class="tooltiptext">Choose from list</span>
+                            <i class="fa fa-list" aria-hidden="true"></i>
+                        </div>
+                    </button>
+                </div>
+                <div class="col-md-3 selector">
+                    {{ render_field(form.meal_type, class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 selector">
+                    {{ render_field(form.difficulty, class="form-control") }}
+                </div>
+                <div class="col-md-3 checkbox">
+                    {{ render_field(form.is_vegetarian, class="form-control") }}
+                </div>
+                <div class="col-md-3 checkbox">
+                    {{ render_field(form.is_vegan, class="form-control") }}
+                </div>
+            </div>
+            <div class="row ingredients-and-method">
+                <div class="col-md-3 ingredients">
+                    {{ render_field(form.ingredients, class="form-control") }}
+                    <button type="button" class="addItem addIngredient" id="ingredients-add">
+                        <div class='button-icon--wrapper'>
+                            <span class="tooltiptext">Add Ingredient</span>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
+                    </button>
+                    <button type="button" class="addItem" id="addIngredientSection">
+                        <div class='button-icon--wrapper'>
+                            <span class="tooltiptext">Add Ingredient Section</span>
+                            <i class='fa fa-list-ul' aria-hidden='true'></i>
+                            <i class='fa fa-plus-circle' aria-hidden='true'></i>
+                        </div>
+                    </button>
+                </div>
+                <div class="col-md-6 method">
+                    {{ render_field(form.method, class="form-control") }}
+                    <button type="button" class="addItem" id="addStep">
+                        <div class="button-icon--wrapper">
+                            <span class="tooltiptext">Add Step</span>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <div class="row utensils">
+                <div class="col-md-3">
+                    {{ render_field(form.utensils, class="form-control") }}
+                </div>
+                <div class="col-md-6">
+                    {{ render_field(form.otherUtensils, class="form-control", placeholder="Add comma separated list of utensils, e.g. knife, fork, spoon") }}
+                </div>
+            </div>
+        </dl>
+        <input type=submit value='Add Recipe' class="btn btn-primary">
+    </form>
+</div>
+
+{% endblock %} {% block customJQuery %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        //Add New Cuisine
+        $("#cuisine-add").click(function() {
+            $("#cuisine").hide()
+            $("#cuisine-add").prev('dd').append($("<input type='text' class='form-control' placeholder='Enter Cuisine' value=''></input>")
+                .attr("id", "otherCuisine")
+                .attr("name", "otherCuisine")
+            );
+            $("#cuisine-add").hide();
+            $("#cuisine-choose").show();
+        });
+
+        $("#cuisine-choose").click(function() {
+            $("#otherCuisine").remove();
+            $("#cuisine").show();
+            $("#cuisine-choose").hide()
+            $("#cuisine-add").show();
+        });
+
+        //Add Main Ingredient
+        $("#main_ingredient-add").click(function() {
+            $("#main_ingredient").hide()
+            $("#main_ingredient-add").prev('dd').append($("<input type='text' class='form-control' placeholder='Enter Main Ingredient' value=''></input>")
+                .attr("id", "otherMain_ingredient")
+                .attr("name", "otherMain_ingredient")
+            );
+            $("#main_ingredient-add").hide();
+            $("#main_ingredient-choose").show();
+        });
+
+        $("#main_ingredient-choose").click(function() {
+            $("#otherMain_ingredient").remove();
+            $("#main_ingredient").show();
+            $("#main_ingredient-choose").hide()
+            $("#main_ingredient-add").show();
+        });
+
+
+        //Add ingredient to appropriate ingredient section
+        $(".ingredients").on("click", ".addIngredient", function() {
+            //split button id to return ingredient list id
+            let ingredientListId = this.id.split('-')[0];
+            //get number of last ingredient in ingredient section so that appropriate name value can be added
+            let lastIngredientNum = parseInt(($("#" + ingredientListId).children('li:last-child').children('input').attr('id')).split('-')[1], 10);
+            //get number of selected ingredient section
+            let sectionNum_selected = parseInt($("#" + ingredientListId).children('li:last-child').children('input').attr('name').split('s')[1][0], 10);
+            //append new list element 
+            const newListItem = $("<li></li>");
+            $("#" + ingredientListId).append(newListItem);
+            //append new input element within list element
+            if (sectionNum_selected) {
+                let newItem = $("<input type='text' value=''></input>")
+                    .attr("id", ingredientListId + "-" + (lastIngredientNum + 1))
+                    .attr("name", "ingredients" + sectionNum_selected + "-" + (lastIngredientNum + 1));
+                $("#" + ingredientListId).children().last().append(newItem);
+            }
+            else {
+                let newItem = $("<input type='text' value=''></input>")
+                    .attr("id", ingredientListId + "-" + (lastIngredientNum + 1))
+                    .attr("name", "ingredients-" + (lastIngredientNum + 1));
+                $("#" + ingredientListId).children().last().append(newItem);
+            }
+
+        });
+
+
+        //Add new ingredient section
+        let sectionNum = 0;
+        $(".ingredients").on("click", "#addIngredientSection", function() {
+            //increment section number each time a new section is added so that inputs can be named appropriately
+            sectionNum++;
+
+            //create temporary input box and button so that user can add name of new section
+            const newSection = $("<input required type='text' class='form-control sectionName' id='sectionName-" + sectionNum + "' name='sectionName-" + sectionNum + "' value='' placeholder='Section Name'></input>");
+            const addSection = $("<button type='button' id='addSection'>Add</button>");
+            $(".ingredients:last").append(newSection, addSection);
+
+            $("#addIngredientSection").remove();
+        });
+
+        //create new ingredient section with name from input box above
+        $(".ingredients").on('click', '#addSection', function() {
+
+            //remove add section name dialog once new section added
+            $("#sectionName-" + sectionNum).hide();
+            $("#addSection").remove();
+
+            if ($("#removeIngredientSection")) {
+                $("#removeIngredientSection").remove();
+            }
+
+            console.log("#sectionName-" + sectionNum);
+            //get input for ingredient section name for section title/description tag
+            const sectionName = $("#sectionName-" + sectionNum).val();
+
+            //create section id from section name
+            const section_id = sectionName.toLowerCase();
+
+            //create description list elements
+            let dt = $("<dt><label for='" + section_id + "'>" + sectionName + "</label>");
+            let dd = $("<dd></dd>");
+            let ul = $("<ul class='form-control' id='" + section_id + "'></ul>");
+
+            //append description list elements
+            $(".ingredients:last").append(dt).append(dd);
+            $(".ingredients dd:last").append(ul);
+
+            //create and append list and input elements
+            for (let i = 0; i < 3; i++) {
+                let li = $("<li></li>");
+                let input = $("<input type='text' value=''></input>")
+                    .attr("id", section_id + "-" + i)
+                    .attr("name", "ingredients" + sectionNum + "-" + i);
+                $(".ingredients ul:last").append(li);
+                $(".ingredients ul:last li").each(function() {
+                    $(this).append(input);
+                });
+            }
+
+            //create add ingredient button for new section
+            const addIngredient = $("<button type='button' class='addItem addIngredient' id='" + section_id + "-add'><div class='button-icon--wrapper'><span class='tooltiptext'>Add Ingredient</span><i class='fa fa-plus' aria-hidden='true'></i></div></button>");
+            $(".ingredients").append(addIngredient);
+
+            //add new "add ingredient section" button
+            let addIngredientSection = $("<button type='button' class='addItem' id='addIngredientSection'><div class='button-icon--wrapper'><span class='tooltiptext'>Add Ingredient Section</span><i class='fa fa-list-ul' aria-hidden='true'></i><i class='fa fa-plus-circle' aria-hidden='true'></i></div></button>");
+            if (sectionNum < 2) {
+                $(".ingredients").append(addIngredientSection);
+            }
+            //add 'remove ingredient section' button
+            const removeIngredientSection = $("<button type='button' class='addItem' id='removeIngredientSection'><div class='button-icon--wrapper'><span class='tooltiptext'>Remove Ingredient Section</span><i class='fa fa-list-ul' aria-hidden='true'></i><i class='fa fa-minus-circle' aria-hidden='true'></i></div></button>");
+            $(".ingredients").append(removeIngredientSection);
+
+
+            //return new section number value for use in future iterations of add functions
+            return sectionNum;
+
+            //return "add ingredient section" button for use in remove ingredient section function
+            return addIngredientSection;
+        });
+
+        $(".ingredients").on('click', '#removeIngredientSection', function() {
+            $(this).prev("button").remove();
+            $(this).prev("button").remove();
+            $(this).prev("dd").remove();
+            $(this).prev("dt").remove();
+            $(this).prev("input").remove();
+            $(this).remove();
+
+            let addIngredientSection = $("<button type='button' class='addItem' id='addIngredientSection'><div class='button-icon--wrapper'><span class='tooltiptext'>Add Ingredient Section</span><i class='fa fa-plus-square' aria-hidden='true'></i></div></button>");
+
+            //re-add 'add ingredient section' button to previous section
+            $(".ingredients").append(addIngredientSection);
+
+            sectionNum--;
+            return sectionNum;
+        });
+
+
+        let numberSteps = 3;
+        // Add new steps to method
+        $("#addStep").click(function() {
+            if (numberSteps < 10) {
+                const newListItem = $("<li></li>");
+                let newItem = $("<textarea required type='text' value=''></textarea>")
+                    .attr("id", "method-" + numberSteps)
+                    .attr("name", "method-" + numberSteps);
+                $("#method").append(newListItem);
+                $("#method li:last-child").append(newItem);
+                numberSteps++;
+                return numberSteps;
+            }
+            else {
+                alert("Please keep method to a maximum of 10 steps");
+            }
+        });
+
+    });
+</script>
+{% endblock %}

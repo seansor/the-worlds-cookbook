@@ -188,58 +188,91 @@ def add_recipe():
     form.utensils.choices = utensil_choices
     
     # retrieve main ingredients
-    main_ingredients_mdb = mongo.db.main_ingredient.find()
-    main_ingredients_object_list = list(main_ingredients_mdb)
-    main_ingredients = (main_ingredients_object_list[0]['ingredient'])
-    main_ingredients_id = (main_ingredients_object_list[0]['_id'])
-    main_ingredients.sort()
+    # create tuples with main ingredients for select list (required by wtforms)
+    main_ingredient_options=select_menu_options(form, mongo.db.main_ingredient, "ingredient")
+    
+    main_ingredients = main_ingredient_options[0]
+    form.main_ingredient.choices = main_ingredient_options[1]
+    main_ingredient_choices = main_ingredient_options[1]
+    main_ingredients_id = main_ingredient_options[2]
+    
+    # retrieve main ingredients
+    # main_ingredients_mdb = mongo.db.main_ingredient.find()
+    # main_ingredients_data = list(main_ingredients_mdb)
+    # main_ingredients = (main_ingredients_data[0]['ingredient'])
+    # main_ingredients_id = (main_ingredients_data[0]['_id'])
+    # main_ingredients.sort()
     
     # create tuples with main ingredients for select list (required by wtforms)
-    main_ingredients_numbers = []
-    for i in range(1, len(main_ingredients)+1):
-        main_ingredients_numbers.append(i)
-    main_ingredient_choices = zip(main_ingredients_numbers,main_ingredients)
-    form.main_ingredient.choices = main_ingredient_choices
+    # main_ingredients_numbers = []
+    # for i in range(1, len(main_ingredients)+1):
+    #     main_ingredients_numbers.append(i)
+    # main_ingredient_choices = zip(main_ingredients_numbers,main_ingredients)
+    # form.main_ingredient.choices = main_ingredient_choices
     
     #retrieve cuisine types
-    cuisine_mdb = mongo.db.cuisine.find()
-    cuisine_object_list = list(cuisine_mdb)
-    cuisines = (cuisine_object_list[0]['cuisine_type'])
-    cuisines_object_id = (cuisine_object_list[0]['_id'])
-    cuisines.sort()
+    # create tuples with main ingredients for select list (required by wtforms)
+    cuisine_options=select_menu_options(form, mongo.db.cuisine, "cuisine_type")
+    
+    cuisines = cuisine_options[0]
+    form.cuisine.choices = cuisine_options[1]
+    cuisine_choices = cuisine_options[1]
+    cuisines_id = cuisine_options[2]
+    
+    #retrieve cuisine types
+    # cuisines_mdb = mongo.db.cuisine.find()
+    # cuisines_data = list(cuisines_mdb)
+    # cuisines = (cuisines_data[0]['cuisine_type'])
+    # cuisines_id = (cuisines_data[0]['_id'])
+    # cuisines.sort()
     
     # create tuples with main ingredients for select list (required by wtforms)
-    cuisine_numbers = []
-    for i in range(1, len(cuisines)+1):
-        cuisine_numbers.append(i)
-    cuisine_choices = zip(cuisine_numbers,cuisines)
-    form.cuisine.choices = cuisine_choices
+    # cuisine_numbers = []
+    # for i in range(1, len(cuisines)+1):
+    #     cuisine_numbers.append(i)
+    # cuisine_choices = zip(cuisine_numbers,cuisines)
+    # form.cuisine.choices = cuisine_choices
+    
+    meal_type_options=select_menu_options(form, mongo.db.meal_type, "type")
+    
+    meal_types = meal_type_options[0]
+    form.meal_type.choices = meal_type_options[1]
+    meal_type_choices = meal_type_options[1]
     
     # retrieve meal types
-    meal_type_mdb = mongo.db.meal_type.find()
-    meal_type_object_list = list(meal_type_mdb)
-    meal_types = (meal_type_object_list[0]['type'])
-    meal_types.sort()
-    meal_type_numbers = []
+    # meal_types_mdb = mongo.db.meal_type.find()
+    # meal_types_data = list(meal_types_mdb)
+    # meal_types = (meal_types_data[0]['type'])
+    # meal_types.sort()
+    
     
     # create tuples with meal types for select list (required by wtforms)
-    for i in range(1, len(meal_types)+1):
-        meal_type_numbers.append(i)
-    meal_type_choices = zip(meal_type_numbers,meal_types)
-    form.meal_type.choices = meal_type_choices
+    # meal_type_numbers = []
+    # for i in range(1, len(meal_types)+1):
+    #     meal_type_numbers.append(i)
+    # meal_type_choices = zip(meal_type_numbers,meal_types)
+    # form.meal_type.choices = meal_type_choices
+    
+    difficulty_level_options=select_menu_options(form, mongo.db.difficulty, "level")
     
     # retrieve difficulty level
-    difficulty_mdb = mongo.db.difficulty.find()
-    difficulty_object_list = list(difficulty_mdb)
-    difficulty_levels = (difficulty_object_list[0]['level'])
-    difficulty_levels.sort()
+    # create tuples with difficulty level for select list (required by wtforms)
+    difficulty_levels = difficulty_level_options[0]
+    form.difficulty.choices = difficulty_level_options[1]
+    difficulty_level_choices = difficulty_level_options[1]
+    
+    # retrieve difficulty level
+    # difficulty_levels_mdb = mongo.db.difficulty.find()
+    # difficulty_levels_data = list(difficulty_levels_mdb)
+    # difficulty_levels = (difficulty_levels_data[0]['level'])
+    # difficulty_levels.sort()
     
     # create tuples with difficulty level for select list (required by wtforms)
-    difficulty_numbers = []
-    for i in range(1, len(difficulty_levels)+1):
-        difficulty_numbers.append(i)
-    difficulty_choices = zip(difficulty_numbers,difficulty_levels)
-    form.difficulty.choices = difficulty_choices
+    # difficulty_level_numbers = []
+    # for i in range(1, len(difficulty_levels)+1):
+    #     difficulty_level_numbers.append(i)
+    # difficulty_level_choices = zip(difficulty_level_numbers,difficulty_levels)
+    # form.difficulty.choices = difficulty_level_choices
     
     # Parse data submitted by add_recipe form andsubmit to database
     if request.method == "POST":
@@ -263,7 +296,7 @@ def add_recipe():
         if request.form.get('otherCuisine'):
             selected_cuisine = request.form.get('otherCuisine')
             if selected_cuisine.lower() not in cuisines:
-                mongo.db.cuisine.update_one({'_id': ObjectId(cuisines_object_id)},
+                mongo.db.cuisine.update_one({'_id': ObjectId(cuisines_id)},
                 { "$push": { "cuisine_type": selected_cuisine.lower() } })
         else:
             cuisine_number = request.form.get('cuisine')
@@ -283,9 +316,9 @@ def add_recipe():
             selected_main_ingredient = all_main_ingredients[int(main_ingredient_number)]
         
         # Get difficulty level selected
-        difficulty_number = request.form.get('difficulty')
-        all_difficulty_levels = dict(difficulty_choices)
-        selected_difficulty_level = all_difficulty_levels[int(difficulty_number)]
+        difficulty_level_number = request.form.get('difficulty')
+        all_difficulty_levels = dict(difficulty_level_choices)
+        selected_difficulty_level = all_difficulty_levels[int(difficulty_level_number)]
         
         # Get meal type selected
         meal_type_number = request.form.get('meal_type')
@@ -382,6 +415,16 @@ def add_recipe():
     else:
         return render_template('add_recipe.html', form = form)
     
+@app.route('/edit_recipe/<recipe_id>', methods=['GET', 'POST'])
+@is_logged_in
+def edit_recipe(recipe_id):
+    
+    recipe_mdb = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
+    app.logger.info(recipe_mdb)
+    # create wtForms object
+    form = editRecipe(request.form, obj=recipe_mdb)
+    
+    return render_template('edit_recipe.html', form=form)
     
     
 if __name__ == "__main__":
