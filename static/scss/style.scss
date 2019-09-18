@@ -43,6 +43,10 @@ ul {
    list-style-type: none;
 }
 
+.errors {
+   color: $offWhite;
+}
+
 li {
    label {
       display: none;
