@@ -26,9 +26,23 @@ def select_menu_options(form, collection, document_attribute):
     
     collection_numbers = []
     for i in range(1, len(collection)+1):
-        collection_numbers.append(i)
+        collection_numbers.append(str(i))
     collection_choices = zip(collection_numbers,collection)
     
     return collection, collection_choices, collection_id
+    
+def utensil_select_menu_options(form, collection):
+    '''retrieve collection and create tuples for wtforms select menus'''
+    company_utensils_mdb = collection.find()
+    company_utensils_data = list(company_utensils_mdb)
+    company_utensil_links = company_utensils_data[0]['utensils']
+    company_utensils = list(company_utensil_links.keys())
+    company_utensils.sort()
+    # create tuples with utensil names for select list (required by wtforms)
+    utensil_numbers = []
+    for i in range(1, len(company_utensils)+1):
+        utensil_numbers.append(str(i))
+    utensil_choices = zip(utensil_numbers,company_utensils)
+    return utensil_choices, company_utensils
     
     
