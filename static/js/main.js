@@ -144,7 +144,6 @@ $(document).ready(function() {
         $("label[for='ingredients2']").text(section_name_2);
     }
 
-
     //Add new ingredient section
     if ($("#ingredients2").length) {
         var sectionNum = 2;
@@ -155,7 +154,6 @@ $(document).ready(function() {
     else {
         sectionNum = 0;
     }
-
 
     //let sectionNum =0;
     $(".ingredients").on("click", "#addIngredientSection", function() {

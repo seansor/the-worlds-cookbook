@@ -1,19 +1,22 @@
 import os
+from datetime import datetime
 from flask import Flask, render_template, flash, redirect, request, url_for, session
 from flask_bcrypt import Bcrypt
 from flask_pymongo import PyMongo
+from dotenv import load_dotenv
 from bson.objectid import ObjectId
 from functools import wraps
-from datetime import datetime
-import math
 from utils import *
 from forms import *
+
+load_dotenv()
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
 app.config["MONGO_DBNAME"] = "the_worlds_cookbook"
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")
+app.secret_key=os.getenv("SECRET_KEY")
 
 mongo = PyMongo(app)
 
@@ -24,7 +27,7 @@ def index():
     
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    '''User Registration'''
+    """User Registration"""
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
         users = mongo.db.users
@@ -49,7 +52,7 @@ def register():
     
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    '''User Login'''
+    """User Login"""
     if request.method == 'POST':
         email = request.form['user_email']
         password_candidate = request.form['user_password']
@@ -61,7 +64,6 @@ def login():
             password = user['password']
             
             if bcrypt.check_password_hash(password, password_candidate):
-                # Passed
                 session['logged_in'] = True
                 session['email'] = email
                 session['name'] = user['firstname']
@@ -80,7 +82,7 @@ def login():
     
 
 def is_logged_in(f):
-    '''Check if user is logged in'''
+    """Check if user is logged in"""
     @wraps(f)
     def wrap(*args, **kwargs):
         if 'logged_in' not in session:
@@ -92,7 +94,7 @@ def is_logged_in(f):
 
 @app.route('/logout')
 def logout():
-    '''Logout'''
+    """Logout"""
     session.clear()
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
@@ -101,16 +103,16 @@ def logout():
 @app.route('/recipes')
 #@is_logged_in
 def browse():
-    '''
+    """
     render browse page showing all recipes in database
     sorted by default by most favourited
-    '''
+    """
     recipes_mdb = mongo.db.recipes.find()
     recipe_list = list(recipes_mdb)
     # sort recipes according to most favourited
     recipe_list.sort(key=lambda x: x['favourite'], reverse=True)
     
-    cuisines = list(mongo.db.cuisine.find())[0]['cuisine_type']
+    cuisines = sorted((mongo.db.cuisine.find())[0]['cuisine_type'])
     app.logger.info(cuisines)
     
     main_ingredients = list(mongo.db.main_ingredient.find())[0]['ingredient']
@@ -126,9 +128,9 @@ def browse():
 @app.route('/my_recipes')
 @is_logged_in
 def my_recipes():
-    '''render my_recipes page
+    """render my_recipes page
         page shows all recipes in database created by current user
-        sorted by default by most recent'''
+        sorted by default by most recent"""
     recipes_mdb = mongo.db.recipes.find()
     recipe_list = list(recipes_mdb)
     # sort recipes according to most favourited
@@ -141,10 +143,10 @@ def my_recipes():
         
 @app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
 def get_recipe(recipe_id):
-    '''
+    """
     Get selected recipe
     Allow signed in users to favourite recipes
-    '''
+    """
     recipe_mdb = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
     ingredient_sections = list(recipe_mdb['ingredients'].keys())
     
@@ -195,29 +197,23 @@ def get_recipe(recipe_id):
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
 def add_recipe():
-    '''
+    """
     create add recipe form
     process add recipe form inputs 
-    '''
+    """
     # create wtForms object
     form = addRecipe(request.form)
     
     # retrieve company utensil names and associated links
-    company_utensils_mdb = mongo.db.company_utensils.find()
-    company_utensils_data = list(company_utensils_mdb)
-    company_utensil_links = company_utensils_data[0]['utensils']
-    company_utensils = list(company_utensil_links.keys())
-    company_utensils.sort()
-    # create tuples with utensil names for select list (required by wtforms)
-    utensil_numbers = []
-    for i in range(1, len(company_utensils)+1):
-        utensil_numbers.append(i)
-    utensil_choices = zip(utensil_numbers,company_utensils)
+    #get required utensils and company utensils
+    utensil_options = utensil_select_menu_options(mongo.db.company_utensils)
+    utensil_choices = utensil_options[0]
+    company_utensils = utensil_options[1]
     form.utensils.choices = utensil_choices
     
     # retrieve main ingredients
     # create tuples with main ingredients for select list (required by wtforms)
-    main_ingredient_options=select_menu_options(form, mongo.db.main_ingredient, "ingredient")
+    main_ingredient_options=select_menu_options(mongo.db.main_ingredient, "ingredient")
     main_ingredients = main_ingredient_options[0]
     form.main_ingredient.choices = main_ingredient_options[1]
     main_ingredient_choices = main_ingredient_options[1]
@@ -225,7 +221,7 @@ def add_recipe():
     
     #retrieve cuisine types
     # create tuples with main ingredients for select list (required by wtforms)
-    cuisine_options=select_menu_options(form, mongo.db.cuisine, "cuisine_type")
+    cuisine_options=select_menu_options(mongo.db.cuisine, "cuisine_type")
     cuisines = cuisine_options[0]
     form.cuisine.choices = cuisine_options[1]
     cuisine_choices = cuisine_options[1]
@@ -233,15 +229,13 @@ def add_recipe():
     
     # retrieve meal types
     # create tuples with meal types for select list (required by wtforms)
-    meal_type_options=select_menu_options(form, mongo.db.meal_type, "type")
-    meal_types = meal_type_options[0]
+    meal_type_options=select_menu_options(mongo.db.meal_type, "type")
     form.meal_type.choices = meal_type_options[1]
     meal_type_choices = meal_type_options[1]
 
     # retrieve difficulty level
     # create tuples with difficulty level for select list (required by wtforms)
-    difficulty_level_options=select_menu_options(form, mongo.db.difficulty, "level")
-    difficulty_levels = difficulty_level_options[0]
+    difficulty_level_options=select_menu_options(mongo.db.difficulty, "level")
     form.difficulty.choices = difficulty_level_options[1]
     difficulty_level_choices = difficulty_level_options[1]
     
@@ -265,14 +259,16 @@ def add_recipe():
         # Get selected cuisine
         # If new cuisine added by user, add new item to database 
         if request.form.get('otherCuisine'):
-            selected_cuisine = request.form.get('otherCuisine')
-            if selected_cuisine.lower() not in cuisines:
+            selected_cuisine = request.form.get('otherCuisine').lower()
+            if selected_cuisine not in cuisines:
                 mongo.db.cuisine.update_one({'_id': ObjectId(cuisines_id)},
-                { "$push": { "cuisine_type": selected_cuisine.lower() } })
+                { "$push": { "cuisine_type": selected_cuisine } })
         else:
+            cuisine_options=select_menu_options(mongo.db.cuisine, "cuisine_type")
+            cuisine_choices = cuisine_options[1]
             cuisine_number = request.form.get('cuisine')
             all_cuisines = dict(cuisine_choices)
-            selected_cuisine = all_cuisines[str(cuisine_number)]
+            selected_cuisine = all_cuisines[cuisine_number]
         
         # Get selected main ingredient
         # If new main ingredient added by user, add new item to database    
@@ -282,20 +278,25 @@ def add_recipe():
                 mongo.db.main_ingredient.update_one({'_id': ObjectId(main_ingredients_id)},
                 { "$push": { "ingredient": selected_main_ingredient.lower() } })
         else:
+            main_ingredient_options=select_menu_options(mongo.db.main_ingredient, "ingredient")
+            main_ingredient_choices = main_ingredient_options[1]
             main_ingredient_number = request.form.get('main_ingredient')
             all_main_ingredients = dict(main_ingredient_choices)
-            selected_main_ingredient = all_main_ingredients[str(main_ingredient_number)]
+            selected_main_ingredient = all_main_ingredients[main_ingredient_number]
         
         # Get difficulty level selected
+        difficulty_level_options=select_menu_options(mongo.db.difficulty, "level")
+        difficulty_level_choices = difficulty_level_options[1]
         difficulty_level_number = request.form.get('difficulty')
         all_difficulty_levels = dict(difficulty_level_choices)
-        selected_difficulty_level = all_difficulty_levels[str(difficulty_level_number)]
+        selected_difficulty_level = all_difficulty_levels[difficulty_level_number]
         
         # Get meal type selected
+        meal_type_options=select_menu_options(mongo.db.meal_type, "type")
+        meal_type_choices = meal_type_options[1]
         meal_type_number = request.form.get('meal_type')
         all_meal_types = dict(meal_type_choices)
         selected_meal_type = all_meal_types[str(meal_type_number)]
-        
         
         vegetarian = request.form.get('is_vegetarian')
         vegan = request.form.get('is_vegan')
@@ -343,14 +344,17 @@ def add_recipe():
             method_step= request.form.get("method-"+str(i))
             method.append(method_step)
             i+=1
+            
+        # get required utensils and company utensils
+        utensil_options = utensil_select_menu_options(mongo.db.company_utensils)
+        utensil_choices = utensil_options[0]
+        company_utensils = utensil_options[1]
+        form.utensils.choices = utensil_choices
         
-        # retrieve and format method steps
-        # get required utensils selected by user
         required_utensils=[]
-        all_company_utensils=dict(utensil_choices)
         selected_utensils=request.form.getlist('utensils')
         for selected_utensil in selected_utensils:
-            required_utensil=all_company_utensils[int(selected_utensil)]
+            required_utensil=company_utensils[int(selected_utensil)]
             required_utensils.append(required_utensil)
         
         # get other utensils input by user
@@ -390,6 +394,10 @@ def add_recipe():
 @app.route('/edit_recipe/<recipe_id>', methods=['GET', 'POST'])
 @is_logged_in
 def edit_recipe(recipe_id):
+    """
+    Create edit recipe form
+    Fill in form fields with original data
+    """
     recipe_mdb = mongo.db.recipes.find_one({'_id': ObjectId(recipe_id)})
     form = editRecipe(request.form)
     
@@ -400,7 +408,8 @@ def edit_recipe(recipe_id):
     form.cook_time.data = (recipe_mdb['cook_time'][0]*60)+recipe_mdb['cook_time'][1]
     form.serves.data = recipe_mdb['serves']
     
-    cuisine_options=select_menu_options(form, mongo.db.cuisine, "cuisine_type")
+    # get cuisine options and set selected option
+    cuisine_options=select_menu_options(mongo.db.cuisine, "cuisine_type")
     cuisine_choices = cuisine_options[1]
     form.cuisine.choices = cuisine_choices
     cuisines = cuisine_options[0]
@@ -408,9 +417,9 @@ def edit_recipe(recipe_id):
         if recipe_mdb['cuisine'] == cuisine:
             form.cuisine.data= str(cuisines.index(cuisine)+1)
     cuisines_id = cuisine_options[2]
-
     
-    main_ingredient_options=select_menu_options(form, mongo.db.main_ingredient, "ingredient")
+    # get main_ingredient options and set selected option
+    main_ingredient_options=select_menu_options(mongo.db.main_ingredient, "ingredient")
     main_ingredient_choices = main_ingredient_options[1]
     form.main_ingredient.choices = main_ingredient_choices
     main_ingredients = main_ingredient_options[0]
@@ -418,16 +427,17 @@ def edit_recipe(recipe_id):
         if recipe_mdb['main_ingredient'] == main_ingredient:
             form.main_ingredient.data = str(main_ingredients.index(main_ingredient)+1)
     main_ingredients_id = main_ingredient_options[2]
-            
 
-    meal_type_options=select_menu_options(form, mongo.db.meal_type, "type")
+    # get meal_type options and set selected option
+    meal_type_options=select_menu_options(mongo.db.meal_type, "type")
     form.meal_type.choices = meal_type_options[1]
     meal_type_choices = meal_type_options[0]
     for meal_type in meal_type_choices:
         if recipe_mdb['meal_type'] == meal_type:
             form.meal_type.data = str(meal_type_choices.index(meal_type)+1)
     
-    difficulty_level_options=select_menu_options(form, mongo.db.difficulty, "level")
+    # get difficulty options and set selected option
+    difficulty_level_options=select_menu_options(mongo.db.difficulty, "level")
     form.difficulty.choices = difficulty_level_options[1]
     difficulty_level_choices = difficulty_level_options[0]
     for difficulty_level in difficulty_level_choices:
@@ -438,11 +448,18 @@ def edit_recipe(recipe_id):
     form.is_vegetarian.data = recipe_mdb['vegetarian']
     form.is_vegan.data = recipe_mdb['vegan']
     
+    # get ingredients
+    # check for number of sections and set section names
     recipe_sections=list(recipe_mdb['ingredients'].keys())
     if len(recipe_sections) > 1:
         section_name_1 = recipe_sections[1]
         if len(recipe_sections) > 2 :
             section_name_2 = recipe_sections[2]
+        else:
+            section_name_2 = ""
+    else:
+        section_name_2 = ""
+        section_name_1 = ""
     
     for section in recipe_sections:
         ingredients = recipe_mdb['ingredients'][section]
@@ -455,14 +472,14 @@ def edit_recipe(recipe_id):
         else:
             for ingredient in ingredients:
                 form.ingredients2.append_entry(ingredient)
-                
+    
+    # set method steps            
     method = recipe_mdb['method']
     for step in method:
         form.method.append_entry(step)
     
     # get required utensils and company utensils
-    utensil_options = utensil_select_menu_options(form, mongo.db.company_utensils)
-    
+    utensil_options = utensil_select_menu_options(mongo.db.company_utensils)
     form.utensils.choices = utensil_options[0]
     company_utensils = utensil_options[1]
     
@@ -499,12 +516,12 @@ def edit_recipe(recipe_id):
         # Get selected cuisine
         # If new cuisine added by user, add new item to database 
         if request.form.get('otherCuisine'):
-            selected_cuisine = request.form.get('otherCuisine')
-            if selected_cuisine.lower() not in cuisines:
+            selected_cuisine = (request.form.get('otherCuisine')).lower()
+            if selected_cuisine not in cuisines:
                 mongo.db.cuisine.update_one({'_id': ObjectId(cuisines_id)},
-                { "$push": { "cuisine_type": selected_cuisine.lower() } })
+                { "$push": { "cuisine_type": selected_cuisine } })
         else:
-            cuisine_options=select_menu_options(form, mongo.db.cuisine, "cuisine_type")
+            cuisine_options=select_menu_options(mongo.db.cuisine, "cuisine_type")
             cuisine_choices = cuisine_options[1]
             cuisine_number = request.form.get('cuisine')
             all_cuisines = dict(cuisine_choices)
@@ -518,21 +535,21 @@ def edit_recipe(recipe_id):
                 mongo.db.main_ingredient.update_one({'_id': ObjectId(main_ingredients_id)},
                 { "$push": { "ingredient": selected_main_ingredient.lower() } })
         else:
-            main_ingredient_options=select_menu_options(form, mongo.db.main_ingredient, "ingredient")
+            main_ingredient_options=select_menu_options(mongo.db.main_ingredient, "ingredient")
             main_ingredient_choices = main_ingredient_options[1]
             main_ingredient_number = request.form.get('main_ingredient')
             all_main_ingredients = dict(main_ingredient_choices)
             selected_main_ingredient = all_main_ingredients[main_ingredient_number]
         
         # Get difficulty level selected
-        difficulty_level_options=select_menu_options(form, mongo.db.difficulty, "level")
+        difficulty_level_options=select_menu_options(mongo.db.difficulty, "level")
         difficulty_level_choices = difficulty_level_options[1]
         difficulty_level_number = request.form.get('difficulty')
         all_difficulty_levels = dict(difficulty_level_choices)
         selected_difficulty_level = all_difficulty_levels[difficulty_level_number]
         
         # Get meal type selected
-        meal_type_options=select_menu_options(form, mongo.db.meal_type, "type")
+        meal_type_options=select_menu_options(mongo.db.meal_type, "type")
         meal_type_choices=meal_type_options[1]
         meal_type_number = request.form.get('meal_type')
         all_meal_types = dict(meal_type_choices)
@@ -572,7 +589,7 @@ def edit_recipe(recipe_id):
             if request.form.get('sectionName-2'):
                 section_name_2 = request.form.get('sectionName-2')
             else:
-                section_name_2
+                section_name_1
             side_2=[]
             i=0
             while request.form.get("ingredients2-"+str(i)):
@@ -592,7 +609,7 @@ def edit_recipe(recipe_id):
             i+=1
             
         # get required utensils and company utensils
-        utensil_options = utensil_select_menu_options(form, mongo.db.company_utensils)
+        utensil_options = utensil_select_menu_options(mongo.db.company_utensils)
         utensil_choices = utensil_options[0]
         company_utensils = utensil_options[1]
         
@@ -612,7 +629,7 @@ def edit_recipe(recipe_id):
             
         favourite = recipe_mdb['favourite']
         
-        # add recipe to database
+        # add updated recipe to database
         mongo.db.recipes.update_one({'_id': ObjectId(recipe_id)}, {'$set':{
             'image': image,
             'title': title,
@@ -637,7 +654,7 @@ def edit_recipe(recipe_id):
         })
         return redirect(url_for('browse'))
     else:
-        return render_template('edit_recipe.html', form=form, recipe_sections=recipe_sections, recipe=recipe_mdb, section_name_1=section_name_1, section_name_2=section_name_2)
+        return render_template('edit_recipe.html', form=form, recipe_sections=recipe_sections, recipe=recipe_mdb, section_name1=section_name_1, section_name2=section_name_2)
 
 
 @app.route('/delete/<recipe_id>')
@@ -653,4 +670,4 @@ if __name__ == "__main__":
     app.secret_key='secret125'
     app.run(host=os.getenv('IP'),
             port=int(os.getenv('PORT')),
-            debug=True)
+            debug=os.getenv("DEBUG"))

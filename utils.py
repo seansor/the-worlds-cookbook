@@ -16,7 +16,7 @@ def time_to_hrs_and_mins(time_in_mins):
     return hours_mins
     
 
-def select_menu_options(form, collection, document_attribute):
+def select_menu_options(collection, document_attribute):
     '''retrieve collection and create tuples for wtforms select menus'''
     collection_mdb = collection.find()
     collection_data = list(collection_mdb)
@@ -31,7 +31,7 @@ def select_menu_options(form, collection, document_attribute):
     
     return collection, collection_choices, collection_id
     
-def utensil_select_menu_options(form, collection):
+def utensil_select_menu_options(collection):
     '''retrieve collection and create tuples for wtforms select menus'''
     company_utensils_mdb = collection.find()
     company_utensils_data = list(company_utensils_mdb)
