@@ -1,15 +1,31 @@
 {% extends 'base.html' %} {% set active_page = "recipe" %} {% block content %}
 <div class="container browse-container">
     <h1 class="page-heading">Browse Recipes</h1>
+    <select id="filter-selector">
+        <option value="all_recipes">Filter By</option>
+        <option value="cuisine">Cuisine</option>
+        <option value="main_ingredient">Main Ingredient</option>
+    </select>
+    <select id="cuisine-selector">
+        <option value="all-types" selected>Select All</option>
+        {% for cuisine in cuisines %}
+        <option value="{{cuisine}}">{{cuisine}}</option>
+        {% endfor %}
+    </select>
+    <select id="main_ingredient-selector">
+        <option value="all-types">Select All</option>
+        {% for ingredient in main_ingredients %}
+        <option value="{{ingredient}}">{{ingredient}}</option>
+        {% endfor %}
+    </select>
     <div class="row">
         {% for recipe in recipes %}
-        <div class="col-md-4 col-lg-3">
+        <div class="{{recipe['cuisine']}} {{recipe['main_ingredient']}} card-container col-md-4 col-lg-3">
             <div class="card">
                 <div class="row">
                     <div class="col-4 col-md-12 header-wrapper">
                         <div class="header" style="background-image: url({{ recipe['image'] }})">
-                            <a href="{{ url_for('get_recipe', recipe_id=recipe['_id'])}}"></a>
-                            {% if recipe['_id'] in user_favourites %}
+                            <a href="{{ url_for('get_recipe', recipe_id=recipe['_id'])}}"></a> {% if recipe['_id'] in user_favourites %}
                             <div class="icon">
                                 <a href="{{ url_for('get_recipe', recipe_id=recipe['_id'])}}"><i class="fa fa-heart-o"></i></a>
                             </div>
@@ -52,4 +68,4 @@
         {%endfor%}
     </div>
 </div>
-{% endblock %} {% block customJQuery %} {% endblock %}
+{% endblock %}

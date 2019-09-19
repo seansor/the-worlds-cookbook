@@ -61,6 +61,13 @@ form dl dt {
   width: 100%;
 }
 
+.browse-container #cuisine-selector, .browse-container #main_ingredient-selector {
+  display: none;
+}
+.browse-container select {
+  border-radius: 5px;
+  padding: 2px;
+}
 .browse-container .card {
   font-size: 0.75rem;
   position: relative;

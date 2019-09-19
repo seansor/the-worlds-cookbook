@@ -110,12 +110,17 @@ def browse():
     # sort recipes according to most favourited
     recipe_list.sort(key=lambda x: x['favourite'], reverse=True)
     
+    cuisines = list(mongo.db.cuisine.find())[0]['cuisine_type']
+    app.logger.info(cuisines)
+    
+    main_ingredients = list(mongo.db.main_ingredient.find())[0]['ingredient']
+    
     if 'logged_in' in session:
         user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
         user_favourites = user['favourites']
-        return render_template('browse.html', recipes=recipe_list, user_favourites=user_favourites)
+        return render_template('browse.html', recipes=recipe_list, user_favourites=user_favourites, cuisines=cuisines, main_ingredients=main_ingredients)
     else:
-        return render_template('browse.html', recipes=recipe_list)
+        return render_template('browse.html', recipes=recipe_list, cuisines=cuisines, main_ingredients=main_ingredients)
 
 
 @app.route('/my_recipes')

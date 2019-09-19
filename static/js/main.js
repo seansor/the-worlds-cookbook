@@ -12,6 +12,43 @@ function hide() {
 
 $(document).ready(function() {
 
+    $('#filter-selector ').click(function() {
+        $('.card-container').show();
+        let filter_option = $('#filter-selector').val();
+        if (filter_option == "cuisine") {
+            console.log(filter_option);
+            $('#cuisine-selector').show();
+            $('#main_ingredient-selector').hide();
+        }
+        else if (filter_option == "main_ingredient") {
+            $('#main_ingredient-selector').show();
+            $('#cuisine-selector').hide();
+        }
+        else{
+            $('#main_ingredient-selector').hide();
+            $('#cuisine-selector').hide();
+            $('.card-container').show();
+        }
+    });
+
+    $('.browse-container').on('click', '#cuisine-selector', function() {
+        $('.card-container').show();
+        let selected_cuisine = $('#cuisine-selector').val();
+        if (selected_cuisine != "all-types") {
+            $('.card-container').not('.' + selected_cuisine).hide();
+        }
+    });
+    
+    $('.browse-container').on('click', '#main_ingredient-selector', function() {
+        $('.card-container').show();
+        let selected_main_ingredient = $('#main_ingredient-selector').val();
+        if (selected_main_ingredient != "all-types") {
+            $('.card-container').not('.' + selected_main_ingredient).hide();
+        }
+    });
+
+
+
     $("#favourite").click(function() {
         $("input[name='favourite']").prop('checked', true);
         $("#favourite-form").submit();
@@ -110,19 +147,19 @@ $(document).ready(function() {
 
     //Add new ingredient section
     if ($("#ingredients2").length) {
-            var sectionNum = 2;
-        }
-        else if ($("#ingredients1").length) {
-            sectionNum = 1;
-        }
-        else {
-            sectionNum = 0;
-        }
+        var sectionNum = 2;
+    }
+    else if ($("#ingredients1").length) {
+        sectionNum = 1;
+    }
+    else {
+        sectionNum = 0;
+    }
 
 
     //let sectionNum =0;
     $(".ingredients").on("click", "#addIngredientSection", function() {
-        
+
         //increment section number each time a new section is added so that inputs can be named appropriately
         sectionNum++;
 
