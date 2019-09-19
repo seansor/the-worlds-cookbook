@@ -96,6 +96,7 @@ def logout():
     session.clear()
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
+
     
 @app.route('/recipes')
 #@is_logged_in
@@ -115,6 +116,7 @@ def browse():
         return render_template('browse.html', recipes=recipe_list, user_favourites=user_favourites)
     else:
         return render_template('browse.html', recipes=recipe_list)
+
 
 @app.route('/my_recipes')
 @is_logged_in
@@ -183,6 +185,7 @@ def get_recipe(recipe_id):
                             company_utensils = company_utensils,
                             company_utensil_links = company_utensil_links,
                             author=fullname, last_edited=last_edited, session=session)
+
     
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
@@ -377,6 +380,7 @@ def add_recipe():
         return redirect(url_for('browse'))
     else:
         return render_template('add_recipe.html', form = form)
+
     
 @app.route('/edit_recipe/<recipe_id>', methods=['GET', 'POST'])
 @is_logged_in
@@ -430,6 +434,10 @@ def edit_recipe(recipe_id):
     form.is_vegan.data = recipe_mdb['vegan']
     
     recipe_sections=list(recipe_mdb['ingredients'].keys())
+    if len(recipe_sections) > 1:
+        section_name_1 = recipe_sections[1]
+        if len(recipe_sections) > 2 :
+            section_name_2 = recipe_sections[2]
     
     for section in recipe_sections:
         ingredients = recipe_mdb['ingredients'][section]
@@ -452,18 +460,6 @@ def edit_recipe(recipe_id):
     
     form.utensils.choices = utensil_options[0]
     company_utensils = utensil_options[1]
-    
-    # company_utensils_mdb = mongo.db.company_utensils.find()
-    # company_utensils_data = list(company_utensils_mdb)
-    # company_utensil_links = company_utensils_data[0]['utensils']
-    # company_utensils = list(company_utensil_links.keys())
-    # company_utensils.sort()
-    # # create tuples with utensil names for select list (required by wtforms)
-    # utensil_numbers = []
-    # for i in range(1, len(company_utensils)+1):
-    #     utensil_numbers.append(str(i))
-    # utensil_choices = zip(utensil_numbers,company_utensils)
-    # form.utensils.choices = utensil_choices
     
     # set selected options from utensil dropdown (company utensils)
     # add otehr utensils to other utensils field
@@ -553,7 +549,10 @@ def edit_recipe(recipe_id):
         
         # if second ingredient section added, get section ingredients    
         if request.form.get("ingredients1-0"):
-            section_name_1 = request.form.get('sectionName-1')
+            if request.form.get('sectionName-1'):
+                section_name_1 = request.form.get('sectionName-1')
+            else:
+                section_name_1
             side_1=[]
             i=0
             while request.form.get("ingredients1-"+str(i)):
@@ -565,7 +564,10 @@ def edit_recipe(recipe_id):
         
         # if third ingredient section added, get section ingredients         
         if request.form.get("ingredients2-0"):
-            section_name_2 = request.form.get('sectionName-2')
+            if request.form.get('sectionName-2'):
+                section_name_2 = request.form.get('sectionName-2')
+            else:
+                section_name_2
             side_2=[]
             i=0
             while request.form.get("ingredients2-"+str(i)):
@@ -588,17 +590,6 @@ def edit_recipe(recipe_id):
         utensil_options = utensil_select_menu_options(form, mongo.db.company_utensils)
         utensil_choices = utensil_options[0]
         company_utensils = utensil_options[1]
-        
-        # company_utensils_mdb = mongo.db.company_utensils.find()
-        # company_utensils_data = list(company_utensils_mdb)
-        # company_utensil_links = company_utensils_data[0]['utensils']
-        # company_utensils = list(company_utensil_links.keys())
-        # company_utensils.sort()
-        # # create tuples with utensil names for select list (required by wtforms)
-        # utensil_numbers = []
-        # for i in range(1, len(company_utensils)+1):
-        #     utensil_numbers.append(str(i))
-        # utensil_choices = zip(utensil_numbers,company_utensils)
         
         # get required utensils selected by user
         required_utensils=[]
@@ -641,7 +632,7 @@ def edit_recipe(recipe_id):
         })
         return redirect(url_for('browse'))
     else:
-        return render_template('edit_recipe.html', form=form, recipe_sections=recipe_sections, recipe=recipe_mdb)
+        return render_template('edit_recipe.html', form=form, recipe_sections=recipe_sections, recipe=recipe_mdb, section_name_1=section_name_1, section_name_2=section_name_2)
 
 
 @app.route('/delete/<recipe_id>')

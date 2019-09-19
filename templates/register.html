@@ -5,8 +5,12 @@
         <div class="col-md-4">
             <form action="/register" method="POST">
                 <dl>
-                    {{ render_field(form.firstname, class="form-control") }} {{ render_field(form.lastname, class="form-control") }} {{ render_field(form.email, class="form-control") }} {{ render_field(form.password, class="form-control") }} {{ render_field(form.confirm,
-                    class="form-control") }} {{ render_field(form.accept_tos) }}
+                    {{ render_field(form.firstname, class="form-control") }}
+                    {{ render_field(form.lastname, class="form-control") }}
+                    {{ render_field(form.email, class="form-control") }}
+                    {{ render_field(form.password, class="form-control") }}
+                    {{ render_field(form.confirm, class="form-control") }}
+                    {{ render_field(form.accept_tos) }}
                 </dl>
                 <input type=submit value=Register class="btn btn-primary">
             </form>

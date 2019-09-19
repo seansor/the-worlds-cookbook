@@ -11,7 +11,6 @@ function hide() {
 }
 
 $(document).ready(function() {
-    
 
     $("#favourite").click(function() {
         $("input[name='favourite']").prop('checked', true);
@@ -100,25 +99,30 @@ $(document).ready(function() {
 
     });
 
+    if ($("label[for='ingredients1']").length) {
+        $("label[for='ingredients1']").text(section_name_1);
+    }
+
+    if ($("label[for='ingredients2']").length) {
+        $("label[for='ingredients2']").text(section_name_2);
+    }
+
 
     //Add new ingredient section
-    let sectionNum = 0;
-    if ($("#ingredients1").length) {
-        sectionNum++;
-        console.log(sectionNum);
-    }
-    else if ($("#ingredients2").length) {
-        sectionNum + 2;
-        console.log(sectionNum);
-    }
-    else {
-        sectionNum;
-        console.log(sectionNum);
-    }
+    if ($("#ingredients2").length) {
+            var sectionNum = 2;
+        }
+        else if ($("#ingredients1").length) {
+            sectionNum = 1;
+        }
+        else {
+            sectionNum = 0;
+        }
+
 
     //let sectionNum =0;
     $(".ingredients").on("click", "#addIngredientSection", function() {
-        console.log(sectionNum);
+        
         //increment section number each time a new section is added so that inputs can be named appropriately
         sectionNum++;
 
@@ -191,9 +195,9 @@ $(document).ready(function() {
     });
 
     $(".ingredients").on('click', '#removeIngredientSection', function() {
-
+        console.log(sectionNum);
         sectionNum--;
-
+        console.log(sectionNum);
         $(this).prev("button").remove();
         $(this).prev("button").remove();
         $(this).prev("dd").remove();

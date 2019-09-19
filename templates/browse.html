@@ -7,15 +7,14 @@
             <div class="card">
                 <div class="row">
                     <div class="col-4 col-md-12 header-wrapper">
-                        <a href="{{ url_for('get_recipe', recipe_id=recipe['_id'])}}">
-                            <div class="header" style="background-image: url({{ recipe['image'] }})">
-                                {% if recipe['_id'] in user_favourites %}
-                                <div class="icon">
-                                    <a href="#"><i class="fa fa-heart-o"></i></a>
-                                </div>
-                                {% endif %}
+                        <div class="header" style="background-image: url({{ recipe['image'] }})">
+                            <a href="{{ url_for('get_recipe', recipe_id=recipe['_id'])}}"></a>
+                            {% if recipe['_id'] in user_favourites %}
+                            <div class="icon">
+                                <a href="{{ url_for('get_recipe', recipe_id=recipe['_id'])}}"><i class="fa fa-heart-o"></i></a>
                             </div>
-                        </a>
+                            {% endif %}
+                        </div>
                     </div>
                     <div class="col-8 col-md-12 text-wrapper">
                         <div class="text">

@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="row recipe-details">
-                <div class="col-6 col-md-4">
+                <div class="col-md-4">
                     <div class="row">
                         <i class="fa fa-clock-o"></i>
                         <div class="d-flex flex-column">
@@ -42,12 +42,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-md-4">
+                <div class="col-6 col-md-4 difficulty">
                     <div class="row align-self-center">
                         <i class="fa fa-cutlery"></i> {{ recipe['difficulty'] }}
                     </div>
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-6 col-md-4 serves">
                     <div class="row align-self-center">
                         <i class="fa fa-users"></i>
                         <span>Serves: {{ recipe['serves'] }}</span>
@@ -57,16 +57,19 @@
             <div class="row recipe-description">
                 <p>{{ recipe['description'] }}</p>
             </div>
+            {% if recipe['vegetarian'] %}
             <div class="row vegetarian">
-                {% if recipe['vegetarian'] %}
-                <span><i class="fa fa-leaf"></i>Vegatarian</span> {% if recipe['vegan'] %}
-                <span><i class="fa fa-leaf"></i>Vegan</span> {% endif %} {% endif %}
+                <span><i class="fa fa-leaf"></i>Vegatarian</span> 
+                {% if recipe['vegan'] %}
+                <span><i class="fa fa-leaf"></i>Vegan</span>
+                {% endif %}
             </div>
+            {% endif %}
         </div>
     </div>
-    <div class="row">
-        {% if session['logged_in'] %}
-        <div class="col-md-4">
+    {% if session['logged_in'] %}
+    <div class="row recipe-edit-delete">
+        <div class="col-md-5">
             <form id="favourite-form" action="{{ url_for('get_recipe', recipe_id=recipe['_id']) }}" method="POST">
                 {% if recipe['_id'] in user_favourites %}
                 <input type="checkbox" name="favourite" checked>
@@ -78,21 +81,21 @@
             </form>
         </div>
         {% if recipe['author'] == user_id %}
-        <div class="col-4">
+        <div class="col-6 col-md-3">
             <form action="{{url_for('edit_recipe', recipe_id=recipe['_id'])}}">
                 <button class="edit-recipe" type='submit'><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
                 <span>Edit Recipe</span>
             </form>
         </div>
-        <div class="col-4">
+        <div class="col-6 col-md-4">
             <div>
                 <button class="edit-recipe delete-recipe" id="delete-recipe" type='button'><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                 <span>Delete Recipe</span>
             </div>
         </div>
         {% endif %}
-        {% endif %}
     </div>
+    {% endif %}
     <div class="row">
         <div class="col-md-4 recipe-ingredients">
             <h2>Ingredients</h2>
@@ -114,11 +117,11 @@
             </ol>
             {% if recipe['required_utensils']|length >0 %}
             <h4>Required Untensils</h4>
-            <ul>
+            <ul class="list-inline list-inline-horizontal">
                 {% for utensil in recipe['required_utensils'] %} {% if utensil in company_utensils %}
-                <li>{{ utensil }}<a href="{{ company_utensil_links[utensil] }}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+                <li  class="list-inline-item">{{ utensil }}<a href="{{ company_utensil_links[utensil] }}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>,</li>
                 {% else %}
-                <li>{{ utensil }}</li>
+                <li class="list-inline-item">{{ utensil }},</li>
                 {% endif %} {% endfor %}
             </ul>
             {% endif %}

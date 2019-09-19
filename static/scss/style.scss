@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 // VARIABLES
-
 // FONT
 $font: 'Roboto',
 sans-serif;
@@ -14,6 +13,7 @@ $gray: #9B9B9B;
 $heart: #f53636;
 $star: #FFE500;
 $button: #E6A756;
+$button-highlight: #ff9814;
 
 
 * {
@@ -51,12 +51,16 @@ li {
    }
 }
 
+
 .loginform {
    width: 100%;
-   margin: 0 auto;
+   color: $offWhite;
 }
 
+
+
 form {
+   margin-top: 35px;
    margin-bottom: 35px;
    dl {
       dt {
@@ -100,6 +104,11 @@ form {
          margin: 3px;
          background-size: cover;
          height: 70px;
+         a {
+            position: absolute;
+            height: 100%;
+            width: 90%;
+         }
          .icon a .fa-heart-o {
             position: absolute;
             left: 270%;
@@ -165,7 +174,7 @@ form {
          bottom: 0;
          height: 10%;
          width: 100%;
-         font-size: 100%; //display: block;
+         font-size: 100%;
          background: $button;
          color: $white;
          text-transform: uppercase;
@@ -173,7 +182,7 @@ form {
          text-align: center;
          transition: 250ms;
          &:hover {
-            background: $heart;
+            background: $button-highlight;
             transition: 250ms;
          }
       }
@@ -195,57 +204,43 @@ form {
             height: 150px;
             .icon a .fa-heart-o {
                left: 85%;
-               bottom: -60%;
+               bottom: -30%;
             }
          }
          .text {
             .recipe-title {
                font-size: 1.1rem;
-               margin: 5px 15px;
+               margin: 5px 10px;
             }
             .info {
                font-size: 0.75rem;
+               padding-left: 10px;
+               padding-right: 10px;
             }
             .fa-clock-o {
                color: $gray;
-               margin-left: 15px;
             }
             .fa-users {
-               margin-left: 15px;
+               margin-left: 10px;
                color: $gray;
             }
 
             .favourites {
                .fa {
-                  margin-left: 15px;
+                  margin-left: 10px;
                   margin-right: 5px;
                }
             }
          }
          .description {
             display: block;
-            margin: 10px 15px;
+            margin: 10px 10px;
             font-size: 0.75rem;
             line-height: 1.5;
             text-overflow: ellipsis;
          }
          a.btn {
-            position: absolute;
-            bottom: 0;
-            height: 10%;
-            width: 100%;
-            font-size: 100%;
             display: block;
-            background: $button;
-            color: $white;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            text-align: center;
-            transition: 250ms;
-            &:hover {
-               background: $heart;
-               transition: 250ms;
-            }
          }
       }
    }
@@ -256,6 +251,10 @@ form {
    border-radius: 10px;
    margin-top: 35px;
    margin-bottom: 35px;
+   
+   form {
+      margin: 0 auto;
+   }
 
    .row {
       margin-left: 0;
@@ -263,11 +262,18 @@ form {
    }
 
    .recipe-img {
-      height: 300px;
+      height: 200px;
       background-size: contain;
       background-repeat: no-repeat;
       background-position: top;
       margin-top: 10px;
+      margin-bottom: 15px;
+   }
+
+   @media(min-width:415px) {
+      .recipe-img {
+         height: 300px;
+      }
    }
 
    .recipe-title {
@@ -280,7 +286,15 @@ form {
          margin-right: 10px;
       }
    }
-
+   
+   @media(max-width: 767px){
+      .recipe-details {
+         .difficulty, .serves {
+            padding-top: 20px;
+         }
+      }
+   }
+   
    .recipe-details {
       margin-bottom: 15px;
       .fa {
@@ -313,6 +327,20 @@ form {
    input[type="checkbox"] {
       display: none;
    }
+   
+   #favourite-form{
+      margin-top:0;
+   }
+   
+   @media(max-width:767px){
+      .edit-recipe, .delete-recipe{
+         margin-top: 15px;
+      }
+   }
+   
+   .recipe-edit-delete{
+      margin-bottom: 15px;
+   }
 
    .edit-recipe {
       height: 35px;
@@ -325,7 +353,7 @@ form {
    .delete-recipe {
       background-color: #ff3e07;
    }
-   
+
    #delete_message {
       display: none;
       position: relative;
@@ -338,7 +366,7 @@ form {
          color: $offWhite;
          padding-top: 25px;
       }
-      
+
       form {
          display: inline-block;
       }
@@ -398,10 +426,14 @@ form {
          right: 23%;
          bottom: 20%;
       }
-   } 
-   
+   }
+
    ol {
       padding-left: 15px;
+   }
+   
+   .fa-external-link {
+      margin-left: 5px;
    }
 }
 

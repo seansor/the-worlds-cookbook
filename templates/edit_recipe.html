@@ -81,27 +81,34 @@
                             <i class='fa fa-list-ul' aria-hidden='true'></i>
                             <i class='fa fa-plus-circle' aria-hidden='true'></i>
                         </div>
-                    </button> {% endif %} {% if recipe_sections[1] %} {{ render_field(form.ingredients1, class="form-control") }}
+                    </button> {% endif %} 
+                    {% if recipe_sections[1] %} 
+                    {{ render_field(form.ingredients1, class="form-control") }}
                     <button type="button" class="addItem addIngredient" id="ingredients1-add">
                         <div class='button-icon--wrapper'>
                             <span class="tooltiptext">Add Ingredient</span>
                             <i class="fa fa-plus" aria-hidden="true"></i>
                         </div>
                     </button>
+                    {% if recipe_sections[1] and not recipe_sections[2] %} 
                     <button type="button" class="addItem" id="addIngredientSection">
                         <div class='button-icon--wrapper'>
                             <span class="tooltiptext">Add Ingredient Section</span>
                             <i class='fa fa-list-ul' aria-hidden='true'></i>
                             <i class='fa fa-plus-circle' aria-hidden='true'></i>
                         </div>
-                    </button> {% if not recipe_sections[2] %}
+                    </button> 
+                    {% endif %}
+                    {% if not recipe_sections[2] %}
                     <button type='button' class='addItem' id='removeIngredientSection'>
                         <div class='button-icon--wrapper'>
                             <span class='tooltiptext'>Remove Ingredient Section</span>
                             <i class='fa fa-list-ul' aria-hidden='true'></i>
                             <i class='fa fa-minus-circle' aria-hidden='true'></i>
                         </div>
-                    </button> {% endif %} {% if recipe_sections[2] %} {{ render_field(form.ingredients2, class="form-control") }}
+                    </button> {% endif %}
+                    {% if recipe_sections[2] %}
+                    {{ render_field(form.ingredients2, class="form-control") }}
                     <button type="button" class="addItem addIngredient" id="ingredients2-add">
                         <div class='button-icon--wrapper'>
                             <span class="tooltiptext">Add Ingredient</span>
@@ -138,5 +145,10 @@
         <input type="submit" value='Update Recipe' class="btn btn-primary">
     </form>
 </div>
+
+<script type="text/javascript">
+    let section_name_1 = "{{section_name_1}}";
+    let section_name_2 = "{{section_name_2}}";
+</script>
 
 {% endblock %}

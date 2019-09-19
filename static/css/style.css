@@ -34,10 +34,11 @@ li label {
 
 .loginform {
   width: 100%;
-  margin: 0 auto;
+  color: #fafafa;
 }
 
 form {
+  margin-top: 35px;
   margin-bottom: 35px;
 }
 form dl dt {
@@ -79,6 +80,11 @@ form dl dt {
   margin: 3px;
   background-size: cover;
   height: 70px;
+}
+.browse-container .card .header a {
+  position: absolute;
+  height: 100%;
+  width: 90%;
 }
 .browse-container .card .header .icon a .fa-heart-o {
   position: absolute;
@@ -152,7 +158,7 @@ form dl dt {
   transition: 250ms;
 }
 .browse-container .card a.btn:hover {
-  background: #f53636;
+  background: #ff9814;
   transition: 250ms;
 }
 @media (min-width: 768px) {
@@ -173,51 +179,37 @@ form dl dt {
   }
   .browse-container .card .header .icon a .fa-heart-o {
     left: 85%;
-    bottom: -60%;
+    bottom: -30%;
   }
   .browse-container .card .text .recipe-title {
     font-size: 1.1rem;
-    margin: 5px 15px;
+    margin: 5px 10px;
   }
   .browse-container .card .text .info {
     font-size: 0.75rem;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .browse-container .card .text .fa-clock-o {
     color: #9B9B9B;
-    margin-left: 15px;
   }
   .browse-container .card .text .fa-users {
-    margin-left: 15px;
+    margin-left: 10px;
     color: #9B9B9B;
   }
   .browse-container .card .text .favourites .fa {
-    margin-left: 15px;
+    margin-left: 10px;
     margin-right: 5px;
   }
   .browse-container .card .description {
     display: block;
-    margin: 10px 15px;
+    margin: 10px 10px;
     font-size: 0.75rem;
     line-height: 1.5;
     text-overflow: ellipsis;
   }
   .browse-container .card a.btn {
-    position: absolute;
-    bottom: 0;
-    height: 10%;
-    width: 100%;
-    font-size: 100%;
     display: block;
-    background: #E6A756;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    text-align: center;
-    transition: 250ms;
-  }
-  .browse-container .card a.btn:hover {
-    background: #f53636;
-    transition: 250ms;
   }
 }
 
@@ -227,16 +219,25 @@ form dl dt {
   margin-top: 35px;
   margin-bottom: 35px;
 }
+.recipe-container form {
+  margin: 0 auto;
+}
 .recipe-container .row {
   margin-left: 0;
   margin-right: 0;
 }
 .recipe-container .recipe-img {
-  height: 300px;
+  height: 200px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: top;
   margin-top: 10px;
+  margin-bottom: 15px;
+}
+@media (min-width: 415px) {
+  .recipe-container .recipe-img {
+    height: 300px;
+  }
 }
 .recipe-container .recipe-title {
   margin-top: 10px;
@@ -246,6 +247,11 @@ form dl dt {
 }
 .recipe-container .recipe-meta .fa {
   margin-right: 10px;
+}
+@media (max-width: 767px) {
+  .recipe-container .recipe-details .difficulty, .recipe-container .recipe-details .serves {
+    padding-top: 20px;
+  }
 }
 .recipe-container .recipe-details {
   margin-bottom: 15px;
@@ -274,6 +280,17 @@ form dl dt {
 }
 .recipe-container input[type=checkbox] {
   display: none;
+}
+.recipe-container #favourite-form {
+  margin-top: 0;
+}
+@media (max-width: 767px) {
+  .recipe-container .edit-recipe, .recipe-container .delete-recipe {
+    margin-top: 15px;
+  }
+}
+.recipe-container .recipe-edit-delete {
+  margin-bottom: 15px;
 }
 .recipe-container .edit-recipe {
   height: 35px;
@@ -354,6 +371,9 @@ form dl dt {
 }
 .recipe-container ol {
   padding-left: 15px;
+}
+.recipe-container .fa-external-link {
+  margin-left: 5px;
 }
 
 #cuisine-choose {
