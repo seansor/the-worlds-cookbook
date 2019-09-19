@@ -1,4 +1,41 @@
+function message() {
+    $("#delete_message").slideDown();
+}
+
+function slide() {
+    $("#delete_message").slideUp();
+}
+
+function hide() {
+    $("#delete_message").fadeOut();
+}
+
 $(document).ready(function() {
+    
+
+    $("#favourite").click(function() {
+        $("input[name='favourite']").prop('checked', true);
+        $("#favourite-form").submit();
+    });
+    $("#unfavourite").click(function() {
+        $("input[name='favourite']").prop('checked', false);
+        $("#favourite-form").submit();
+    });
+
+
+    $("#delete-recipe").click(function() {
+        message();
+    });
+
+    $("#cancel").click(function() {
+        slide();
+    });
+
+    $("#confirm-delete").click(function() {
+        hide();
+    });
+
+
     //Add New Cuisine
     $("#cuisine-add").click(function() {
         $("#cuisine").hide()
@@ -169,13 +206,13 @@ $(document).ready(function() {
             let addIngredientSection = $("<button type='button' class='addItem' id='addIngredientSection'><div class='button-icon--wrapper'><span class='tooltiptext'>Add Ingredient Section</span><i class='fa fa-list-ul' aria-hidden='true'></i><i class='fa fa-plus-circle' aria-hidden='true'></i></div></button>");
             $(".ingredients").append(addIngredientSection);
         }
-        
+
         //add "remove-ingredient-section" button if two sections are still present
         if (sectionNum == 1) {
             const removeIngredientSection = $("<button type='button' class='addItem' id='removeIngredientSection'><div class='button-icon--wrapper'><span class='tooltiptext'>Remove Ingredient Section</span><i class='fa fa-list-ul' aria-hidden='true'></i><i class='fa fa-minus-circle' aria-hidden='true'></i></div></button>");
             $(".ingredients").append(removeIngredientSection);
         }
-        
+
         return sectionNum;
     });
 

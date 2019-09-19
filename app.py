@@ -20,12 +20,11 @@ mongo = PyMongo(app)
 @app.route('/')
 def index():
     return render_template("index.html", recipes=mongo.db.recipes.find())
+  
     
-
- 
-# User Registration
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    '''User Registration'''
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
         users = mongo.db.users
@@ -48,9 +47,9 @@ def register():
     return render_template('register.html', form=form)
     
     
-# User Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    '''User Login'''
     if request.method == 'POST':
         email = request.form['user_email']
         password_candidate = request.form['user_password']
@@ -60,7 +59,6 @@ def login():
         
         if user:
             password = user['password']
-            print(password)
             
             if bcrypt.check_password_hash(password, password_candidate):
                 # Passed
@@ -80,8 +78,9 @@ def login():
             
     return render_template("login.html")
     
-# Check if user is logged in
+
 def is_logged_in(f):
+    '''Check if user is logged in'''
     @wraps(f)
     def wrap(*args, **kwargs):
         if 'logged_in' not in session:
@@ -90,15 +89,16 @@ def is_logged_in(f):
         return f(*args, **kwargs)
     return wrap
     
-# Logout
+
 @app.route('/logout')
 def logout():
+    '''Logout'''
     session.clear()
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
     
-@app.route('/browse')
-@is_logged_in
+@app.route('/recipes')
+#@is_logged_in
 def browse():
     '''
     render browse page showing all recipes in database
@@ -109,13 +109,28 @@ def browse():
     # sort recipes according to most favourited
     recipe_list.sort(key=lambda x: x['favourite'], reverse=True)
     
-    user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
-    user_favourites = user['favourites']
+    if 'logged_in' in session:
+        user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
+        user_favourites = user['favourites']
+        return render_template('browse.html', recipes=recipe_list, user_favourites=user_favourites)
+    else:
+        return render_template('browse.html', recipes=recipe_list)
+
+@app.route('/my_recipes')
+@is_logged_in
+def my_recipes():
+    '''render my_recipes page
+        page shows all recipes in database created by current user
+        sorted by default by most recent'''
+    recipes_mdb = mongo.db.recipes.find()
+    recipe_list = list(recipes_mdb)
+    # sort recipes according to most favourited
+    recipe_list.sort(key=lambda x: x['last_edited'], reverse=True)
     
-    mongo.db.recipes.remove({'title': "test"})
-       
-    return render_template('browse.html', recipes=recipe_list, user_favourites=user_favourites)
-  
+    #user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
+    #user_favourites = user['favourites']
+    return render_template('my_recipes.html', recipes=recipe_list, user_id=ObjectId(session['id']))
+
         
 @app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
 def get_recipe(recipe_id):
@@ -140,28 +155,34 @@ def get_recipe(recipe_id):
     
     # add/remove recipe from user favourites
     # count number of times recipe has been favourited
-    if request.method == "POST":
-        favourite= request.form.get('favourite')
-        if favourite:
-            mongo.db.users.update_one({'_id': ObjectId(session['id'])},
-            { "$push": { "favourites": ObjectId(recipe_id) } })
-            mongo.db.recipes.update_one({'_id': ObjectId(recipe_id)},
-            { "$inc": { "favourite": 1 } })
-        else:
-            mongo.db.users.update_one({'_id': ObjectId(session['id'])},
-            { "$pull": { "favourites": ObjectId(recipe_id) } })
-            mongo.db.recipes.update_one({'_id': ObjectId(recipe_id)},
-            { "$inc": { "favourite": -1 } })
-        return redirect(url_for("get_recipe", recipe_id=recipe_mdb['_id']))
+    if 'logged_in' in session:
+        user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
+        user_favourites = user['favourites']
+        if request.method == "POST":
+            favourite= request.form.get('favourite')
+            if favourite:
+                mongo.db.users.update_one({'_id': ObjectId(session['id'])},
+                { "$push": { "favourites": ObjectId(recipe_id) } })
+                mongo.db.recipes.update_one({'_id': ObjectId(recipe_id)},
+                { "$inc": { "favourite": 1 } })
+            else:
+                mongo.db.users.update_one({'_id': ObjectId(session['id'])},
+                { "$pull": { "favourites": ObjectId(recipe_id) } })
+                mongo.db.recipes.update_one({'_id': ObjectId(recipe_id)},
+                { "$inc": { "favourite": -1 } })
+            return redirect(url_for("get_recipe", recipe_id=recipe_mdb['_id']))
     
-    user = mongo.db.users.find_one({'_id': ObjectId(session['id']) })
-    user_favourites = user['favourites']
-    
-    return render_template('recipe.html', recipe=recipe_mdb,
+        return render_template('recipe.html', recipe=recipe_mdb,
                             ingredient_sections=ingredient_sections,
                             company_utensils = company_utensils,
                             company_utensil_links = company_utensil_links,
-                            user_favourites=user_favourites, author=fullname, last_edited=last_edited)
+                            user_favourites=user_favourites, author=fullname, last_edited=last_edited, session=session, user_id=ObjectId(session['id']))
+    else:
+        return render_template('recipe.html', recipe=recipe_mdb,
+                            ingredient_sections=ingredient_sections,
+                            company_utensils = company_utensils,
+                            company_utensil_links = company_utensil_links,
+                            author=fullname, last_edited=last_edited, session=session)
     
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @is_logged_in
@@ -621,6 +642,15 @@ def edit_recipe(recipe_id):
         return redirect(url_for('browse'))
     else:
         return render_template('edit_recipe.html', form=form, recipe_sections=recipe_sections, recipe=recipe_mdb)
+
+
+@app.route('/delete/<recipe_id>')
+@is_logged_in
+def delete(recipe_id):
+    mongo.db.recipes.remove({'_id': ObjectId(recipe_id)}, {
+     'justOne': True})
+    return redirect(url_for('browse'))
+
     
 if __name__ == "__main__":
     # Remember to hide the secret key at the end

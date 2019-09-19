@@ -42,22 +42,19 @@
                 <div class="container">
                     <a class="navbar-brand text-uppercase text-expanded font-weight-bold d-lg-none" href="#">The World's Cookbook</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
                     <div class="collapse navbar-collapse" id="navbarResponsive">
                         <ul class="navbar-nav mx-auto">
                             <li class="nav-item {% if active_page == 'index' %}active{% endif %} px-lg-4">
                                 <a class="nav-link text-uppercase text-expanded" href="{{url_for('index')}}">Home
-                        <span class="sr-only">(current)</span>
-                    </a>
+                                <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item dropdown {% if active_page == 'recipe' %}active{% endif %} px-lg-4">
-                                <a class="nav-link dropdown-toggle text-uppercase text-expanded" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Recipes
-                    </a>
+                                <a class="nav-link dropdown-toggle text-uppercase text-expanded" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Recipes</a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{url_for('browse')}}">Browse</a>
-                                    <a class="dropdown-item" href="#">My Recipes</a>
+                                    <a class="dropdown-item" href="{{url_for('my_recipes')}}">My Recipes</a>
                                     <a class="dropdown-item" href="{{url_for('add_recipe')}}">Add Recipe</a>
                                 </div>
                             </li>

@@ -1,0 +1,58 @@
+{% extends 'base.html' %} {% set active_page = "recipe" %} {% block content %}
+<div class="container browse-container">
+    <h1 class="page-heading">Browse Recipes</h1>
+    <div class="row">
+        {% for recipe in recipes %}
+        {% if recipe['author'] == user_id %}
+        <div class="col-md-4 col-lg-3">
+            <div class="card">
+                <div class="row">
+                    <div class="col-4 col-md-12 header-wrapper">
+                        <a href="{{ url_for('get_recipe', recipe_id=recipe['_id'])}}">
+                            <div class="header" style="background-image: url({{ recipe['image'] }})">
+                                {% if recipe['_id'] in user_favourites %}
+                                <div class="icon">
+                                    <a href="#"><i class="fa fa-heart-o"></i></a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-8 col-md-12 text-wrapper">
+                        <div class="text">
+                            <h6 class="recipe-title">
+                                {{ recipe['title'] }}
+                            </h6>
+                            <div class="info">
+                                <span>
+                            <i class="fa fa-clock-o"></i>
+                            {% if recipe['total_time'][0] %}
+                            {{ recipe['total_time'][0] }} Hr
+                                {% if recipe['total_time'][1] %}
+                                {{ recipe['total_time'][1] }} Mins
+                                {% endif %}
+                            {% else %}
+                            {{ recipe['total_time'][1] }} Mins
+                            {% endif %}
+                        </span>
+                                <span>
+                            <i class="fa fa-users"></i>
+                             Serves {{ recipe['serves'] }}
+                        </span>
+                            </div>
+                            <div class="favourites">
+                                <span><i class="fa fa-heart" aria-hidden="true"></i>{{ recipe['favourite'] }}</span>
+                            </div>
+                            <p class="description">{{ recipe['description'] }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <a href="{{ url_for('get_recipe', recipe_id=recipe['_id'])}}" class="btn">Let's Cook!</a>
+            </div>
+        </div>
+        {% endif %}
+        {%endfor%}
+    </div>
+</div>
+{% endblock %} {% block customJQuery %} {% endblock %}

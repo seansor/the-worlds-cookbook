@@ -1,19 +1,17 @@
-{% extends 'base.html' %}
-{% set active_page = "register" %}
+{% extends 'base.html' %} {% set active_page = "register" %} {% block content %} {% from "/includes/_formhelpers.html" import render_field %}
 
-{% block content %} {% from "/includes/_formhelpers.html" import render_field %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <form action="/register" method="POST">
+                <dl>
+                    {{ render_field(form.firstname, class="form-control") }} {{ render_field(form.lastname, class="form-control") }} {{ render_field(form.email, class="form-control") }} {{ render_field(form.password, class="form-control") }} {{ render_field(form.confirm,
+                    class="form-control") }} {{ render_field(form.accept_tos) }}
+                </dl>
+                <input type=submit value=Register class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+</div>
 
-
-<form action="/register" method="POST">
-    <dl>
-        {{ render_field(form.firstname, class="form-control") }}
-        {{ render_field(form.lastname, class="form-control") }}
-        {{ render_field(form.email, class="form-control") }}
-        {{ render_field(form.password, class="form-control") }}
-        {{ render_field(form.confirm, class="form-control") }}
-        {{ render_field(form.accept_tos) }}
-    </dl>
-    <input type=submit value=Register class="btn btn-primary">
-</form>
-
-{% endblock %}
+    {% endblock %}
