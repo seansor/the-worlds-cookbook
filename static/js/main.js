@@ -16,7 +16,6 @@ $(document).ready(function() {
         $('.card-container').show();
         let filter_option = $('#filter-selector').val();
         if (filter_option == "cuisine") {
-            console.log(filter_option);
             $('#cuisine-selector').show();
             $('#main_ingredient-selector').hide();
         }
@@ -24,7 +23,7 @@ $(document).ready(function() {
             $('#main_ingredient-selector').show();
             $('#cuisine-selector').hide();
         }
-        else{
+        else {
             $('#main_ingredient-selector').hide();
             $('#cuisine-selector').hide();
             $('.card-container').show();
@@ -38,7 +37,7 @@ $(document).ready(function() {
             $('.card-container').not('.' + selected_cuisine).hide();
         }
     });
-    
+
     $('.browse-container').on('click', '#main_ingredient-selector', function() {
         $('.card-container').show();
         let selected_main_ingredient = $('#main_ingredient-selector').val();
@@ -117,23 +116,24 @@ $(document).ready(function() {
         let lastIngredientNum = parseInt(($("#" + ingredientListId).children('li:last-child').children('input').attr('id')).split('-')[1], 10);
         //get number of selected ingredient section
         let sectionNum_selected = parseInt($("#" + ingredientListId).children('li:last-child').children('input').attr('name').split('s')[1][0], 10);
-        //append new list element 
-        const newListItem = $("<li></li>");
-        $("#" + ingredientListId).append(newListItem);
-        //append new input element within list element
-        if (sectionNum_selected) {
-            let newItem = $("<input type='text' value=''></input>")
-                .attr("id", ingredientListId + "-" + (lastIngredientNum + 1))
-                .attr("name", "ingredients" + sectionNum_selected + "-" + (lastIngredientNum + 1));
-            $("#" + ingredientListId).children().last().append(newItem);
+        if (lastIngredientNum < 20) {
+            //append new list element 
+            const newListItem = $("<li></li>");
+            $("#" + ingredientListId).append(newListItem);
+            //append new input element within list element
+            if (sectionNum_selected) {
+                let newItem = $("<input type='text' value=''></input>")
+                    .attr("id", ingredientListId + "-" + (lastIngredientNum + 1))
+                    .attr("name", "ingredients" + sectionNum_selected + "-" + (lastIngredientNum + 1));
+                $("#" + ingredientListId).children().last().append(newItem);
+            }
+            else {
+                let newItem = $("<input type='text' value=''></input>")
+                    .attr("id", ingredientListId + "-" + (lastIngredientNum + 1))
+                    .attr("name", "ingredients-" + (lastIngredientNum + 1));
+                $("#" + ingredientListId).children().last().append(newItem);
+            }
         }
-        else {
-            let newItem = $("<input type='text' value=''></input>")
-                .attr("id", ingredientListId + "-" + (lastIngredientNum + 1))
-                .attr("name", "ingredients-" + (lastIngredientNum + 1));
-            $("#" + ingredientListId).children().last().append(newItem);
-        }
-
     });
 
     if ($("label[for='ingredients1']").length) {
@@ -176,12 +176,10 @@ $(document).ready(function() {
 
     //create new ingredient section with name from input box above
     $(".ingredients").on('click', '#addSection', function() {
-        console.log(sectionNum);
         //remove add section name dialog once new section added
         $("#sectionName-" + sectionNum).hide();
         $("#addSection").remove();
 
-        console.log("#sectionName-" + sectionNum);
         //get input for ingredient section name for section title/description tag
         const sectionName = $("#sectionName-" + sectionNum).val();
 
@@ -230,9 +228,8 @@ $(document).ready(function() {
     });
 
     $(".ingredients").on('click', '#removeIngredientSection', function() {
-        console.log(sectionNum);
+
         sectionNum--;
-        console.log(sectionNum);
         $(this).prev("button").remove();
         $(this).prev("button").remove();
         $(this).prev("dd").remove();

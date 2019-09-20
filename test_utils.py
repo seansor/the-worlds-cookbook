@@ -1,6 +1,6 @@
 import unittest
 from app import mongo, ObjectId
-from utils import *
+from utils import time_to_hrs_and_mins, select_menu_options, utensil_select_menu_options
 
 class TestUtilityFunctions(unittest.TestCase):
     """

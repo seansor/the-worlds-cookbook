@@ -6,17 +6,19 @@ from flask_pymongo import PyMongo
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
 from functools import wraps
-from utils import *
-from forms import *
+from utils import time_to_hrs_and_mins, select_menu_options, utensil_select_menu_options
+from forms import RegistrationForm, addRecipe, editRecipe
 
 load_dotenv()
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
-app.config["MONGO_DBNAME"] = "the_worlds_cookbook"
+app.config["MONGO_DBNAME"] = os.getenv("DB_NAME")
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 app.secret_key=os.getenv("SECRET_KEY")
+
+app.config["BASEDIR"] = os.getenv("BASEDIR")
 
 mongo = PyMongo(app)
 
@@ -101,7 +103,6 @@ def logout():
 
     
 @app.route('/recipes')
-#@is_logged_in
 def browse():
     """
     render browse page showing all recipes in database
@@ -667,7 +668,6 @@ def delete(recipe_id):
     
 if __name__ == "__main__":
     # Remember to hide the secret key at the end
-    app.secret_key='secret125'
     app.run(host=os.getenv('IP'),
             port=int(os.getenv('PORT')),
             debug=os.getenv("DEBUG"))

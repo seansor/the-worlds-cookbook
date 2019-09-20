@@ -1,6 +1,4 @@
 import math
-from forms import *
-
 
 def time_to_hrs_and_mins(time_in_mins):
     '''Convert cooking time from minutes to hours & minutes '''

@@ -3,3 +3,6 @@
 __pycache__/
 venv/
 .flaskenv
+app.pyc
+test_app.pyc
+test_utils.pyc
