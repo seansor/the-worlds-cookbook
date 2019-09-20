@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% set active_page = "recipe" %} {% block content %}
+{% extends 'base.html' %} {% set active_page = "recipe" %} 
+
+{% block content %}
 
 <div class="container recipe-container">
     <div class="row header">
@@ -35,16 +37,33 @@
                     <div class="row">
                         <i class="fa fa-clock-o"></i>
                         <div class="d-flex flex-column">
-                            <div>Prep: {% if recipe['prep_time'][0] %} {{ recipe['prep_time'][0] }} Hr {% if recipe['prep_time'][1] %} {{ recipe['prep_time'][1] }} Mins {% endif %} {% else %} {{ recipe['prep_time'][1] }} Mins {% endif %}
+                            <div>Prep: 
+                            {% if recipe['prep_time'][0] %}
+                                {{ recipe['prep_time'][0] }} Hr 
+                                {% if recipe['prep_time'][1] %} 
+                                    {{ recipe['prep_time'][1] }} Mins 
+                                {% endif %} 
+                            {% else %} 
+                                {{ recipe['prep_time'][1] }} Mins 
+                            {% endif %}
                             </div>
-                            <div>Cook: {% if recipe['cook_time'][0] %} {{ recipe['cook_time'][0] }} Hr {% if recipe['cook_time'][1] %} {{ recipe['cook_time'][1] }} Mins {% endif %} {% else %} {{ recipe['cook_time'][1] }} Mins {% endif %}
+                            <div>Cook: 
+                            {% if recipe['cook_time'][0] %} 
+                                {{ recipe['cook_time'][0] }} Hr 
+                                {% if recipe['cook_time'][1] %} 
+                                    {{ recipe['cook_time'][1] }} Mins 
+                                {% endif %} 
+                            {% else %} 
+                                {{ recipe['cook_time'][1] }} Mins 
+                            {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4 difficulty">
                     <div class="row align-self-center">
-                        <i class="fa fa-cutlery"></i> {{ recipe['difficulty'] }}
+                        <i class="fa fa-cutlery"></i> 
+                        {{ recipe['difficulty'] }}
                     </div>
                 </div>
                 <div class="col-6 col-md-4 serves">
@@ -73,10 +92,16 @@
             <form id="favourite-form" action="{{ url_for('get_recipe', recipe_id=recipe['_id']) }}" method="POST">
                 {% if recipe['_id'] in user_favourites %}
                 <input type="checkbox" name="favourite" checked>
-                <span><button id="unfavourite" href="#"><i class="fa fa-heart-o"></i></button>Remove from favourites</span>
+                <span>
+                    <button id="unfavourite" href="#"><i class="fa fa-heart-o"></i></button>
+                    Remove from favourites
+                </span>
                 {% else %}
                 <input type="checkbox" name="favourite">
-                <span><button id="favourite" href="#"><i class="fa fa-heart-o"></i></button>Add to Favourites</span>
+                <span>
+                    <button id="favourite" href="#"><i class="fa fa-heart-o"></i></button>
+                    Add to Favourites
+                </span>
                 {% endif %}
             </form>
         </div>
@@ -128,7 +153,5 @@
         </div>
     </div>
 </div>
-
-{% endblock %} {% block customJQuery %}
 
 {% endblock %}

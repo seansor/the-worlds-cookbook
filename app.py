@@ -17,10 +17,10 @@ bcrypt = Bcrypt(app)
 app.config["MONGO_DBNAME"] = os.getenv("DB_NAME")
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 app.secret_key=os.getenv("SECRET_KEY")
-
 app.config["BASEDIR"] = os.getenv("BASEDIR")
 
 mongo = PyMongo(app)
+
 
 @app.route('/')
 def index():
@@ -114,7 +114,6 @@ def browse():
     recipe_list.sort(key=lambda x: x['favourite'], reverse=True)
     
     cuisines = sorted((mongo.db.cuisine.find())[0]['cuisine_type'])
-    app.logger.info(cuisines)
     
     main_ingredients = list(mongo.db.main_ingredient.find())[0]['ingredient']
     
@@ -206,7 +205,7 @@ def add_recipe():
     form = addRecipe(request.form)
     
     # retrieve company utensil names and associated links
-    #get required utensils and company utensils
+    # get required utensils and company utensils
     utensil_options = utensil_select_menu_options(mongo.db.company_utensils)
     utensil_choices = utensil_options[0]
     company_utensils = utensil_options[1]
@@ -220,7 +219,7 @@ def add_recipe():
     main_ingredient_choices = main_ingredient_options[1]
     main_ingredients_id = main_ingredient_options[2]
     
-    #retrieve cuisine types
+    # retrieve cuisine types
     # create tuples with main ingredients for select list (required by wtforms)
     cuisine_options=select_menu_options(mongo.db.cuisine, "cuisine_type")
     cuisines = cuisine_options[0]
@@ -338,7 +337,7 @@ def add_recipe():
             ingredients={"Main": main, section_name_1:side_1, section_name_2:side_2} 
         
         
-        #retrieve and format method steps
+        # retrieve and format method steps
         method = []
         i=0
         while request.form.get("method-"+str(i)):
@@ -667,7 +666,6 @@ def delete(recipe_id):
 
     
 if __name__ == "__main__":
-    # Remember to hide the secret key at the end
     app.run(host=os.getenv('IP'),
             port=int(os.getenv('PORT')),
             debug=os.getenv("DEBUG"))

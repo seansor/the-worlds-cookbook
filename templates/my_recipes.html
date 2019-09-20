@@ -24,27 +24,26 @@
                                 {{ recipe['title'] }}
                             </h6>
                             <div class="info">
-                                <span>
-                            <i class="fa fa-clock-o"></i>
-                            {% if recipe['total_time'][0] %}
-                            {{ recipe['total_time'][0] }} Hr
-                                {% if recipe['total_time'][1] %}
+                            <span>
+                                <i class="fa fa-clock-o"></i>
+                                {% if recipe['total_time'][0] %}
+                                {{ recipe['total_time'][0] }} Hr
+                                    {% if recipe['total_time'][1] %}
+                                    {{ recipe['total_time'][1] }} Mins
+                                    {% endif %}
+                                {% else %}
                                 {{ recipe['total_time'][1] }} Mins
                                 {% endif %}
-                            {% else %}
-                            {{ recipe['total_time'][1] }} Mins
-                            {% endif %}
-                        </span>
-                                <span>
-                            <i class="fa fa-users"></i>
-                             Serves {{ recipe['serves'] }}
-                        </span>
+                            </span>
+                            <span>
+                                <i class="fa fa-users"></i>
+                                Serves {{ recipe['serves'] }}
+                            </span>
                             </div>
                             <div class="favourites">
                                 <span><i class="fa fa-heart" aria-hidden="true"></i>{{ recipe['favourite'] }}</span>
                             </div>
-                            <p class="description">{{ recipe['description'] }}
-                            </p>
+                            <p class="description">{{ recipe['description'] }}</p>
                         </div>
                     </div>
                 </div>
@@ -55,4 +54,4 @@
         {%endfor%}
     </div>
 </div>
-{% endblock %} {% block customJQuery %} {% endblock %}
+{% endblock %}

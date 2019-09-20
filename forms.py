@@ -3,7 +3,7 @@ from wtforms.fields.html5 import URLField
 
 class RegistrationForm(Form):
     """ Register Form Class (WTForms)"""
-    firstname = StringField('First Name', [validators.Length(min=4, max=15)])
+    firstname = StringField('First Name', [validators.Length(min=2, max=15)])
     lastname = StringField('Last Name', [validators.Length(min=4, max=15)])
     email = StringField('Email Address', [validators.Length(min=6, max=35)])
     password = PasswordField('New Password', [
@@ -17,7 +17,7 @@ class RegistrationForm(Form):
 class addRecipe(Form):
     image = URLField('Recipe Image', [validators.InputRequired()])
     title = StringField('Title', [validators.Length(min=4, max=40), validators.InputRequired()])
-    description = TextAreaField('Description', [validators.Length(min=15, max=150), validators.InputRequired()])
+    description = TextAreaField('Description', [validators.Length(min=10, max=150), validators.InputRequired()])
     cook_time = IntegerField('Cooking Time', [validators.InputRequired()])
     prep_time = IntegerField('Preparation Time', [validators.InputRequired()])
     serves = StringField('Servings', [validators.Length(min=1, max=12),validators.InputRequired()])

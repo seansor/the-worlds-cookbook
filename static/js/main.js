@@ -11,7 +11,8 @@ function hide() {
 }
 
 $(document).ready(function() {
-
+    
+    // select what category to filter ingredients by
     $('#filter-selector ').click(function() {
         $('.card-container').show();
         let filter_option = $('#filter-selector').val();
@@ -29,7 +30,8 @@ $(document).ready(function() {
             $('.card-container').show();
         }
     });
-
+    
+    // select cuisine to filter by
     $('.browse-container').on('click', '#cuisine-selector', function() {
         $('.card-container').show();
         let selected_cuisine = $('#cuisine-selector').val();
@@ -37,7 +39,8 @@ $(document).ready(function() {
             $('.card-container').not('.' + selected_cuisine).hide();
         }
     });
-
+    
+    // select main ingredient to filter by
     $('.browse-container').on('click', '#main_ingredient-selector', function() {
         $('.card-container').show();
         let selected_main_ingredient = $('#main_ingredient-selector').val();
@@ -45,27 +48,30 @@ $(document).ready(function() {
             $('.card-container').not('.' + selected_main_ingredient).hide();
         }
     });
-
-
-
+    
+    // add recipe to favourites
     $("#favourite").click(function() {
         $("input[name='favourite']").prop('checked', true);
         $("#favourite-form").submit();
     });
+    
+    // remove recipe from favourites
     $("#unfavourite").click(function() {
         $("input[name='favourite']").prop('checked', false);
         $("#favourite-form").submit();
     });
 
-
+    // delete recipe
     $("#delete-recipe").click(function() {
         message();
     });
-
+    
+    // cancel delete recipe
     $("#cancel").click(function() {
         slide();
     });
-
+    
+    // confrim delete recipe
     $("#confirm-delete").click(function() {
         hide();
     });
@@ -82,6 +88,7 @@ $(document).ready(function() {
         $("#cuisine-choose").show();
     });
 
+    // show cuisine selector
     $("#cuisine-choose").click(function() {
         $("#otherCuisine").remove();
         $("#cuisine").show();
@@ -100,6 +107,7 @@ $(document).ready(function() {
         $("#main_ingredient-choose").show();
     });
 
+    // Show Main Ingredient selector
     $("#main_ingredient-choose").click(function() {
         $("#otherMain_ingredient").remove();
         $("#main_ingredient").show();
@@ -137,10 +145,14 @@ $(document).ready(function() {
     });
 
     if ($("label[for='ingredients1']").length) {
+        //section_name_1 is defined in script at the end of edit recipe
+        //variable passed from app
         $("label[for='ingredients1']").text(section_name_1);
     }
 
     if ($("label[for='ingredients2']").length) {
+        //section_name_2 is defined in script at the end of edit recipe
+        //variable passed from app
         $("label[for='ingredients2']").text(section_name_2);
     }
 
@@ -185,7 +197,6 @@ $(document).ready(function() {
 
         //create section id from section name
         const section_id = "ingredients" + sectionNum;
-        //sectionName.toLowerCase();
 
         //create description list elements
         let dt = $("<dt><label for='" + section_id + "'>" + sectionName + "</label>");

@@ -84,6 +84,7 @@ form dl dt {
   }
 }
 .browse-container .card .header {
+  position: relative;
   margin: 3px;
   background-size: cover;
   height: 70px;
@@ -95,7 +96,7 @@ form dl dt {
 }
 .browse-container .card .header .icon a .fa-heart-o {
   position: absolute;
-  left: 270%;
+  left: 370%;
   bottom: 20%;
   background: #f53636;
   color: #fff;
@@ -181,11 +182,12 @@ form dl dt {
     box-shadow: 0px 0px 30px 2px #000;
   }
   .browse-container .card .header {
+    position: relative;
     background-size: cover;
     height: 150px;
   }
   .browse-container .card .header .icon a .fa-heart-o {
-    left: 85%;
+    left: 100%;
     bottom: -30%;
   }
   .browse-container .card .text .recipe-title {
@@ -225,6 +227,9 @@ form dl dt {
   border-radius: 10px;
   margin-top: 35px;
   margin-bottom: 35px;
+}
+.recipe-container .header {
+  position: relative;
 }
 .recipe-container form {
   margin: 0 auto;
@@ -311,10 +316,11 @@ form dl dt {
 }
 .recipe-container #delete_message {
   display: none;
-  position: relative;
-  top: 0px;
+  position: absolute;
+  top: 50%;
   width: 100%;
-  height: 150px;
+  height: auto;
+  z-index: 1;
   background-color: #f536369e;
   text-align: center;
 }

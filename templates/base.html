@@ -30,13 +30,10 @@
     <div class="container-fluid" id="page-container">
         <div id="page-content-wrap">
             {% include 'includes/_messages.html' %}
-
-
             <h1 class="site-heading text-center text-white d-none d-lg-block">
                 <span class="site-heading-upper text-primary mb-3">Sponsored By SOR Cooking Equipment</span>
                 <span class="site-heading-lower">The World's Cookbook</span>
             </h1>
-
             <!-- Navigation -->
             <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" id="mainNav">
                 <div class="container">
@@ -66,19 +63,19 @@
                                 <a class="nav-link text-uppercase text-expanded" href="{{url_for('login')}}">Login</a>
                             </li>
                             {% else %}
-
                             <li class="nav-item px-lg-4">
                                 <a class="nav-link text-uppercase text-expanded" href="{{url_for('logout')}}">Logout</a>
                             </li>
-                            <span class="navbar-text px-lg-4">
-                      <em>Welcome {{session.name}}</em>
-                    </span> {% endif %}
+                            <span class="navbar-text px-lg-4"><em>Welcome {{session.name}}</em></span> 
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
             </nav>
 
-            {% block content %} {% endblock %}
+            {% block content %} 
+            
+            {% endblock %}
 
             <footer class="footer text-faded text-center py-5">
                 <div class="container">
